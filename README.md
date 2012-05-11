@@ -1,1 +1,1 @@
-See (issues)[https://github.com/eladb/pizu/issues]
+See [issues](https://github.com/eladb/pizu/issues)
