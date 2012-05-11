@@ -1,2 +1,1 @@
-pizu2
-=====
+See (issues)[https://github.com/eladb/pizu/issues]
