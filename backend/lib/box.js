@@ -8,7 +8,7 @@ module.exports = function(options) {
   var payloads = {};
   var timeout = null;
 
-  api.deposit = function(key, payload) {    
+  api.deposit = function(key, payload) {
     console.log('DEPOSIT %s', key);
 
     if (!timeout) {

@@ -40,6 +40,21 @@ module.exports = {
       test.done();
     });
   },
+
+  test_race: function(test) {
+    req('c1', function(err, res, body) {
+      test.equal(res.statusCode, 404);
+      
+      var i = 0;
+      function handler(err, res, body) {
+        test.equal(res.statusCode, 200);
+        if (++i === 2) test.done();
+      }
+
+      req('c1', handler);
+      req('c2', handler);
+    });
+  },
 };
 
 function req(cid, fn) {

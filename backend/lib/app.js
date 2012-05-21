@@ -31,10 +31,12 @@ server.post('/', function(req, res) {
   if (!box) box = boxes[boxid] = createBox();
 
   box.on('timeout', function() {
+    delete boxes[boxid];
     return res.send('No pair found', 404);
   });
 
   box.on('full', function(payloads) {
+    delete boxes[boxid];
     return res.send(payloads);
   });
 
