@@ -68,10 +68,16 @@ $(function() {
           console.log('found other payload:', payload[k]);
           $('#other').html(other.name);
 
-          var fbid = other.fbid || k;
+          var fbid = other.fbid;
+
+          var graph = '/me/mutualfriends/' + fbid;
           
-          FB.api('/me/mutualfriends/' + fbid, function(res) {
-            alert(JSON.stringify(response));
+          FB.api(graph, function(res) {
+            res.data.forEach(function(friend) {
+              var imgsrc = 'https://graph.facebook.com/' + friend.id + '/picture';
+              var li = $('<li><img src="' + imgsrc + '">' + friend.name + '</li>');
+              $('#mutual').append(li);
+            });
           });
         }
       }

@@ -40,6 +40,13 @@ server.post('/', function(req, res) {
     return res.send(payloads);
   });
 
+  if (process.env.NODE_ENV !== 'production') {
+    box.deposit('563367011', {
+      name: 'Ram',
+      fbid: '563367011'
+    });
+  }
+
   box.deposit(cid, req.body);
 
   return true;
