@@ -12,21 +12,28 @@ $(function() {
     });
   }
 
-  // for browsers
-  FB.init({ appId: APP_ID, cookie: true });
-  FB.getLoginStatus(function(s) {
-    if (s.status !== 'connected') {
-      return FB.login(after_login);
-    }
-    else {
-      return after_login();
-    }
-  });
+  var browser = 
+    navigator.userAgent.indexOf('Chrome') !== -1 ||
+    navigator.userAgent.indexOf('Safari') !== -1;
+
+  if (browser) {
+    // for browsers
+    FB.init({ appId: APP_ID, cookie: true });  
+    FB.getLoginStatus(function(s) {
+      if (s.status !== 'connected') {
+        return FB.login(after_login);
+      }
+      else {
+        return after_login();
+      }
+    });
+  }
 
   // phonegap initialization
   document.addEventListener("deviceready", function() {
     CDV.FB.init(APP_ID);
     CDV.FB.getLoginStatus(function(s) {
+      console.log(JSON.stringify(s));
       if (s.status !== 'connected') {
         return CDV.FB.login(null, after_login);
       }
@@ -64,7 +71,7 @@ $(function() {
       url: url,
       data: { name: name, fbid: cid },
     }).done(function(payload) {
-      console.log('payload:', payload);
+      console.log('payload:' + payload);
 
       $('#pair').removeClass('disabled');
       
@@ -79,8 +86,12 @@ $(function() {
           var fbid = other.fbid;
 
           var graph = '/me/mutualfriends/' + fbid;
+          console.log(graph);
           
+          $('#mutual').empty();
+
           FB.api(graph, function(res) {
+            console.log('response:'+JSON.stringify(res));
             res.data.forEach(function(friend) {
               var imgsrc = 'https://graph.facebook.com/' + friend.id + '/picture';
               var li = $('<li><img src="' + imgsrc + '">' + friend.name + '</li>');
