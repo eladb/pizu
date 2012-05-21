@@ -54,7 +54,7 @@ $(function() {
     $.ajax({
       type: 'post',
       url: url,
-      data: { name: name },
+      data: { name: name, fbid: cid },
     }).done(function(payload) {
       console.log('payload:', payload);
 
@@ -63,8 +63,16 @@ $(function() {
       for (var k in payload) {
         console.log('k=', k);
         if (k != cid) {
+          var other = payload[k];
+
           console.log('found other payload:', payload[k]);
-          $('#other').html(payload[k].name);
+          $('#other').html(other.name);
+
+          var fbid = other.fbid || k;
+          
+          FB.api('/me/mutualfriends/' + fbid, function(res) {
+            alert(JSON.stringify(response));
+          });
         }
       }
     }).fail(function(jqxhr, textStatus, body) {
