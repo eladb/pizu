@@ -1,21 +1,31 @@
+var APP_ID = '146577522141106';
 
 $(function() {
 
   $('#content').hide();
 
-  function onDeviceReady() {
-    var APP_ID = '146577522141106';
-    CDV.FB.init(APP_ID);
+  function after_login() {
+    FB.api('/me', function(response) {
+      $('#name').attr('value', response.name);
+      $('#cid').attr('value', response.id);
+      $('#content').show();
+    });
+  }
 
-    function after_login() {
-      FB.api('/me', function(response) {
-        $('#name').attr('value', response.name);
-        $('#cid').attr('value', response.id);
-
-        $('#content').show();
-      });
+  // for browsers
+  FB.init({ appId: APP_ID, cookie: true });
+  FB.getLoginStatus(function(s) {
+    if (s.status !== 'connected') {
+      return FB.login(after_login);
     }
+    else {
+      return after_login();
+    }
+  });
 
+  // phonegap initialization
+  document.addEventListener("deviceready", function() {
+    CDV.FB.init(APP_ID);
     CDV.FB.getLoginStatus(function(s) {
       if (s.status !== 'connected') {
         return CDV.FB.login(null, after_login);
@@ -24,9 +34,7 @@ $(function() {
         return after_login();
       }
     });
-  }
-
-  document.addEventListener("deviceready", onDeviceReady, false);
+  }, false);
 
   $('#refresh').click(function(e) {
     e.preventDefault();
