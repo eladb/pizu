@@ -1,18 +1,29 @@
 
 $(function() {
 
+  $('#content').hide();
+
   function onDeviceReady() {
     var APP_ID = '146577522141106';
     CDV.FB.init(APP_ID);
-    setTimeout(function() {
-      CDV.FB.login(null, function() {
-        FB.api('/me', function(response) {
-          $('#name').attr('value', response.name);
-          $('#cid').attr('value', response.id);
-        });
+
+    function after_login() {
+      FB.api('/me', function(response) {
+        $('#name').attr('value', response.name);
+        $('#cid').attr('value', response.id);
+
+        $('#content').show();
       });
-    }, 2000);
-    
+    }
+
+    CDV.FB.getLoginStatus(function(s) {
+      if (s.status !== 'connected') {
+        return CDV.FB.login(null, after_login);
+      }
+      else {
+        return after_login();
+      }
+    });
   }
 
   document.addEventListener("deviceready", onDeviceReady, false);
