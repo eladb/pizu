@@ -70,8 +70,13 @@ $(function() {
 
         var geoHash = encodeGeoHash(position.coords.latitude, position.coords.longitude);
         console.log('geoHash: ' + geoHash);
+        alert('Hash:' + geoHash);
+        // Take the first 7 chars to have an accuracy of ~70 meters
+        geoHash = geohash.slice(0,7);
 
+        console.log('geoHash after slice: ' + geoHash);
         console.log('name=%s cid=%d', name, cid);
+        alert('Lan:' + position.coords.latitude + ' Lon:' + position.coords.longitude + ' Hash:' + geoHash);
 
         var url = '/?sid=' + geoHash + '&cid=' + cid;
 
