@@ -29,3 +29,20 @@ exports.full = function(test) {
   box.deposit('a', {x:4});
   box.deposit('b', {y:47});
 };
+
+exports.extend_capacity = function(test) {
+  var box = require('../lib/box')({ ttl: 500 });
+
+  box.on('full', function(payloads) {
+    test.ok(false);
+    test.done();
+  });
+
+  box.on('timeout', function() {
+    test.done();
+  })
+
+  box.deposit('a', {x:4});
+  box.deposit('b', {x:4});
+  box.deposit('c', {x:4});
+};

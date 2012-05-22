@@ -11,19 +11,19 @@ module.exports = function(options) {
   api.deposit = function(key, payload) {
     console.log('DEPOSIT %s', key);
 
-    if (!timeout) {
-      timeout = setTimeout(function() {
-        api.emit('timeout');
-        api.empty();
-      }, ttl);
-    }
-
     payloads[key] = payload;
 
-    if (Object.keys(payloads).length === capacity) {
-      api.emit('full', payloads);
-      api.empty();
-    }
+    if (!timeout) {
+      timeout = setTimeout(function() {
+        if (Object.keys(payloads).length === capacity) {
+          api.emit('full', payloads);
+        }
+        else{
+          api.emit('timeout');
+        }
+        api.empty();
+      }, ttl);
+    }    
   };
 
   api.empty = function() {
