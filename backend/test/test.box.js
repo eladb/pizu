@@ -30,7 +30,7 @@ exports.full = function(test) {
   box.deposit('b', {y:47});
 };
 
-exports.extend_capacity = function(test) {
+exports.exceed_capacity = function(test) {
   var box = require('../lib/box')({ ttl: 500 });
 
   box.on('full', function(payloads) {
