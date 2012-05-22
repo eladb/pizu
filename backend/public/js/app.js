@@ -57,6 +57,9 @@ $(function() {
       return;
     }
 
+    // Clear results of previous pairing
+    $('#mutual').empty();
+    
     var name = $('#name').attr('value');
     var cid = $('#cid').attr('value');
 
@@ -70,13 +73,13 @@ $(function() {
 
         var geoHash = encodeGeoHash(position.coords.latitude, position.coords.longitude);
         console.log('geoHash: ' + geoHash);
-        alert('Hash:' + geoHash);
+        //alert('Hash:' + geoHash);
         // Take the first 7 chars to have an accuracy of ~70 meters
         geoHash = geohash.slice(0,7);
 
         console.log('geoHash after slice: ' + geoHash);
         console.log('name=%s cid=%d', name, cid);
-        alert('Lan:' + position.coords.latitude + ' Lon:' + position.coords.longitude + ' Hash:' + geoHash);
+        //alert('Lan:' + position.coords.latitude + ' Lon:' + position.coords.longitude + ' Hash:' + geoHash);
 
         var url = '/?sid=' + geoHash + '&cid=' + cid;
 
@@ -103,8 +106,6 @@ $(function() {
 
               var graph = '/me/mutualfriends/' + fbid;
               console.log(graph);
-              
-              $('#mutual').empty();
 
               FB.api(graph, function(res) {
                 console.log('response:'+JSON.stringify(res));
