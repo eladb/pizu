@@ -66,6 +66,8 @@ $(function() {
  
         function (position) {  
  
+        console.log(position);
+
         var geoHash = encodeGeoHash(position.coords.latitude, position.coords.longitude);
         console.log('geoHash: ' + geoHash);
 
