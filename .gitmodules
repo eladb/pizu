@@ -1,0 +1,3 @@
+[submodule "geohash-js"]
+	path = geohash-js
+	url = https://github.com/davetroy/geohash-js.git
