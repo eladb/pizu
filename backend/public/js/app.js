@@ -60,23 +60,60 @@ $(function() {
     var name = $('#name').attr('value');
     var cid = $('#cid').attr('value');
 
-
     if (navigator.geolocation) 
     {
         navigator.geolocation.getCurrentPosition( 
  
         function (position) {  
  
-        // Did we get the position correctly?
-        alert ('latitude: ' + position.coords.latitude + ' , longitude: ' + position.coords.longitude);
-        console.log(position);
+        var geoHash = encodeGeoHash(position.coords.latitude, position.coords.longitude);
+        console.log('geoHash: ' + geoHash);
 
+        console.log('name=%s cid=%d', name, cid);
 
-        //To see everything available in the position.coords array:
-        //for (key in position.coords) {alert(key)}
-     
-        //mapServiceProvider(position.coords.latitude,position.coords.longitude);
-     
+        var url = '/?sid=' + geoHash + '&cid=' + cid;
+
+        $('#pair').addClass('disabled');
+
+        $.ajax({
+          type: 'post',
+          url: url,
+          data: { name: name, fbid: cid },
+        }).done(function(payload) {
+          console.log('payload:' + payload);
+
+          $('#pair').removeClass('disabled');
+          
+          for (var k in payload) {
+            console.log('k=', k);
+            if (k != cid) {
+              var other = payload[k];
+
+              console.log('found other payload:', payload[k]);
+              $('#other').html(other.name);
+
+              var fbid = other.fbid;
+
+              var graph = '/me/mutualfriends/' + fbid;
+              console.log(graph);
+              
+              $('#mutual').empty();
+
+              FB.api(graph, function(res) {
+                console.log('response:'+JSON.stringify(res));
+                res.data.forEach(function(friend) {
+                  var imgsrc = 'https://graph.facebook.com/' + friend.id + '/picture';
+                  var li = $('<li><img src="' + imgsrc + '">' + friend.name + '</li>');
+                  $('#mutual').append(li);
+                });
+              });
+            }
+          }
+        }).fail(function(jqxhr, textStatus, body) {
+          $('#pair').removeClass('disabled');
+          alert(body);
+        });
+    
         }, 
         // next function is the error callback
         function (error)
@@ -102,50 +139,6 @@ $(function() {
     //}
     //else // finish the error checking if the client is not compliant with the spec
 
-
-    console.log('name=%s cid=%d', name, cid);
-
-    var url = '/?sid=1&cid=' + cid;
-
-    $('#pair').addClass('disabled');
-
-    $.ajax({
-      type: 'post',
-      url: url,
-      data: { name: name, fbid: cid },
-    }).done(function(payload) {
-      console.log('payload:' + payload);
-
-      $('#pair').removeClass('disabled');
-      
-      for (var k in payload) {
-        console.log('k=', k);
-        if (k != cid) {
-          var other = payload[k];
-
-          console.log('found other payload:', payload[k]);
-          $('#other').html(other.name);
-
-          var fbid = other.fbid;
-
-          var graph = '/me/mutualfriends/' + fbid;
-          console.log(graph);
-          
-          $('#mutual').empty();
-
-          FB.api(graph, function(res) {
-            console.log('response:'+JSON.stringify(res));
-            res.data.forEach(function(friend) {
-              var imgsrc = 'https://graph.facebook.com/' + friend.id + '/picture';
-              var li = $('<li><img src="' + imgsrc + '">' + friend.name + '</li>');
-              $('#mutual').append(li);
-            });
-          });
-        }
-      }
-    }).fail(function(jqxhr, textStatus, body) {
-      $('#pair').removeClass('disabled');
-      alert(body);
-    });
+    
   });
 });
