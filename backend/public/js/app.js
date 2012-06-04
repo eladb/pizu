@@ -70,7 +70,7 @@ $(function() {
 
       navigator.accelerometer.watchAcceleration(function (acceleration) {
         var changes = {};
-        bound = 0.2;
+        bound = 0.5;
         
         if (previousReading.x !== null || isShaken === "true" ) {
             changes.x = Math.abs(previousReading.x, acceleration.x);
@@ -93,7 +93,6 @@ $(function() {
   }
 
   function shaken(){
-      alert("shaken");
       isShaken = "true";
       navigator.notification.vibrate(2500);
       pair();
