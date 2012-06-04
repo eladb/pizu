@@ -149,6 +149,9 @@ function createView(view) {
     ctx.save();
 
     var centerX = self.x() + self.width() / 2;
+    
+    if (!self.y) {alert('aa');}
+
     var centerY = self.y() + self.height() / 2;
 
     if (self.rotate && self.rotate()) {
