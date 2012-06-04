@@ -85,9 +85,9 @@ $(function() {
 
         alert("test2");
         previousReading = {
-        x: reading.x,
-        y: reading.y,
-        z: reading.z
+        x: acceleration.x,
+        y: acceleration.y,
+        z: acceleration.z
         }
 
         alert("previousReading X " + previousReading.x + " Y " + previousReading.y + " Z " + previousReading.z);
