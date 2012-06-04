@@ -82,18 +82,18 @@ $(function() {
             changes.y = Math.abs(previousReading.y - acceleration.y);
             changes.z = Math.abs(previousReading.z - acceleration.z);
 
-            //alert("changes " + changes.x +","+changes.y+","+changes.z );
+            alert("changes " + changes.x +","+changes.y+","+changes.z );
             //alert("changes " + changes.x);
 
             //if (changes.x > bound && changes.y > bound && changes.z > bound) {
-            if (changes.y > bound) {
-              previousReading = {
-                  x: null,
-                  y: null,
-                  z: null
-              }
-              alert("changes " + changes.y);
-              shaken();
+            //if (changes.y > bound) {
+            //  previousReading = {
+            //      x: null,
+            //      y: null,
+            //      z: null
+            //  }
+              //alert("changes " + changes.y);
+              //shaken();
             }
         }
         else {
