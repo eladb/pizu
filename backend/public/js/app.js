@@ -12,6 +12,7 @@ $(function() {
       name = response.name;
       cid = response.id;
       showMyImage();
+      startWatch();
     });
   }
 
@@ -254,8 +255,6 @@ $(function() {
       }
     });
   }
-
-  startWatch();
 
   var refreshImage = new Image();
   refreshImage.src = 'img/refresh.png';
