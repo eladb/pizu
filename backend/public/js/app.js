@@ -96,12 +96,12 @@ $(function() {
               //shaken();
             //}
         }
-        else {
+        //else {
           previousReading = {
           x: acceleration.x,
           y: acceleration.y,
           z: acceleration.z
-        }
+        //}
       }
         
         }, onError, { frequency: 100 });
