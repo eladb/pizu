@@ -60,8 +60,7 @@ $(function() {
 
     // The watch id references the current `watchAcceleration`
     var watchID = null;
-    var isShaken = "false";
-
+    
    // Start watching the acceleration
    function startWatch() {
       var previousReading = {
@@ -72,11 +71,11 @@ $(function() {
 
       navigator.accelerometer.watchAcceleration(function (acceleration) {
         var changes = {};
-        bound = 8;
+        bound = 9;
         
         //alert("isShaken " + isShaken );
 
-        if (previousReading.x !== null || isShaken == "true" ) {
+        if (previousReading.x !== null) {
             changes.x = Math.abs(previousReading.x - acceleration.x);
             changes.y = Math.abs(previousReading.y - acceleration.y);
             changes.z = Math.abs(previousReading.z - acceleration.z);
@@ -104,10 +103,8 @@ $(function() {
   }
 
   function shaken(){
-      isShaken = "true";
       navigator.notification.vibrate(2500);
       pair();
-      isShaken = "false";
   }
 
   // Error
