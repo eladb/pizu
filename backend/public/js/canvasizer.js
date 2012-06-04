@@ -52,11 +52,14 @@ function createLayer() {
   };
 }
 
-function createImage(img, x, y, w, h, alpha, deg) {
+var TO_RADIANS = Math.PI/180; 
+
+function createImage(img, x, y, w, h, alpha, deg, fbid) {
   return {
     img: img,
     alpha: alpha || 1.0,
     deg : deg || 0.0,
+    fbid : fbid || 0,
     visible: true,
     x: x,
     y: y,
@@ -71,7 +74,7 @@ function createImage(img, x, y, w, h, alpha, deg) {
       var centerY = (this.y + this.height / 2);
       ctx.save();
       ctx.translate(centerX, centerY);
-      ctx.rotate(deg);
+      ctx.rotate(this.deg * TO_RADIANS);
       ctx.translate(-centerX, -centerY);
       ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
       ctx.restore();
@@ -146,6 +149,9 @@ function createView(view) {
     ctx.save();
 
     var centerX = self.x() + self.width() / 2;
+    
+    if (!self.y) {alert('aa');}
+
     var centerY = self.y() + self.height() / 2;
 
     if (self.rotate && self.rotate()) {

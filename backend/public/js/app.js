@@ -116,6 +116,9 @@ $(function() {
       alert('onError!');
   }
 
+  var layer = createLayer();
+  var canvas = $('canvas')[0];
+
   function pair() {
     if (!cid || !name) {
       console.error('still not logged in');
@@ -123,8 +126,13 @@ $(function() {
     }
     
     //if (development) {
+<<<<<<< HEAD
     //  showFriends(development.friends);
     //  return; 
+=======
+      //showFriends(development.friends);
+      //return; 
+>>>>>>> fixing issues and integrating with Leon
     //}
 
     if (navigator.geolocation) {
@@ -169,7 +177,13 @@ $(function() {
               FB.api(graph, function(res) {
                 console.log('response:'+JSON.stringify(res));
                 var friends = res.data;
-                showFriends(friends);
+                //showFriends(friends);
+                // Find shared friends and drop them
+                friends.forEach(function(friend) {
+                  Object.keys(layer._objects).forEach(function(key){
+                    if (friend.id == layer._objects[key].fbid) { layer._objects[key].ondrop(); };
+                  });  
+                });
               });
             }
           }
@@ -197,8 +211,7 @@ $(function() {
     }
   }
 
-  var layer = createLayer();
-  var canvas = $('canvas')[0];
+  
   canvasize(canvas, layer);
 
   function showMyImage() {
@@ -250,24 +263,25 @@ $(function() {
       
       img.onload = function() {
         
-        var deg = Math.random()*2 - 1;
+        var deg = Math.random()*360 - 180;
         x = Math.floor(Math.random() * (canvas.width - 50) + 25);
         y = Math.floor(Math.random() * (canvas.height - 200) + 25);
 
         // var obj = createImage(img, x, y, SZ, SZ, null, deg);
-        var obj = createPolaroid(img, x, y, SZ, friend.name);
-        obj.rotate = function() { return deg; };
+        var obj = createPolaroid(img, x, y, SZ, friend.name, null, deg, friend.id);
       
         obj.friend = friend;
         obj.src = img.src;
         obj.state = 'out';
         friends.bigImg = null;      
+        var context = canvas.getContext('2d'); 
 
         function openImage() {
           obj.bringToTop();
+          obj.deg = 0;
 
-          var centerX = obj.x + obj.width / 2;
-          var centerY = obj.y + obj.height / 2;          
+          var centerX = obj.x() + obj.width() / 2;
+          var centerY = obj.y() + obj.height() / 2;          
           
           var v = 10;
 
@@ -275,35 +289,35 @@ $(function() {
             var m = obj.state === 'out' ? 1 : -1;
             if (friends.bigImg && friends.bigImg != obj) {
               friends.bigImg.onclick = null;
-              friends.bigImg.width -= v;
-              friends.bigImg.height -= v;
-              if (friends.bigImg.width <= SZ) {
-                friends.bigImg.width = SZ;
-                friends.bigImg.height = SZ;
+              friends.bigImg.xlength -= v;
+              //friends.bigImg.height -= v;
+              if (friends.bigImg.width() <= SZ) {
+                friends.bigImg.xlength = SZ;
+                //friends.bigImg.height = SZ;
                 clearInterval(iv);
                 friends.bigImg.onclick = openImage;
                 friends.bigImg.state = 'out';
               }
             }
 
-            obj.width += v * m;
-            obj.height += v * m;
-            obj.onclick = null;
-            obj.x = centerX - obj.width / 2;
-            obj.y = centerY - obj.height / 2;
+            obj.xlength += v * m;
+            //obj.height += v * m;
+            //obj.onclick = null;
+            obj.xcoor = centerX - obj.width() / 2;
+            obj.ycoor = centerY - obj.height() / 2;
 
-            if (obj.width >= 200) {
-              obj.width = 200;
-              obj.height = 200;
+            if (obj.width() >= 200) {
+              obj.xlength = 200;
+              //obj.height = 200;
               clearInterval(iv);
               obj.onclick = openImage;
               friends.bigImg = obj;
               obj.state = 'in';
             }
 
-            if (obj.width <= SZ) {
-              obj.width = SZ;
-              obj.height = SZ;
+            if (obj.width() <= SZ) {
+              obj.xlength = SZ;
+              //obj.height = SZ;
               clearInterval(iv);
               obj.onclick = openImage;            
               friends.bigImg = null;
@@ -311,8 +325,44 @@ $(function() {
             }
           }, 10);
         };
+        
+        function shakeImage() {
+          obj.bringToTop();
+          obj.deg = 45;
+          var counter = 0;
 
-        obj.onclick = openImage;
+          var iv = setInterval(function() {
+            // Shake
+            obj.deg *= -1;
+            counter++;
+            if (counter >= 20) { //2 secs
+              obj.deg = 0;
+              clearInterval(iv);
+              dropImage();
+            }
+          }, 10);
+        };
+
+        function dropImage() {
+          obj.bringToTop();
+
+          var iv = setInterval(function() {
+            obj.ycoor += 
+              //(obj.height / 2) +
+              25 +  
+              (obj.ycoor / 7); //Acceleration
+
+            obj.alpha -= 0.1  
+            if (obj.ycoor + obj.height() >= canvas.height) {
+              clearInterval(iv);
+              obj.visible = false;
+            } 
+          }, 30);
+        };
+
+        obj.onclick = openImage;        
+        obj.ondrop = shakeImage;
+
         x += SZ;
 
         if (x > canvas.width) {
@@ -362,19 +412,51 @@ function createText(view) {
   return self;
 }
 
-function createPolaroid(im, x, y, width, label) {
+function createPolaroid(im, x, y, width, label, alpha, deg, fbid) {
 
   var rect = createRectangleView({ 
-    x: function() { return x; }, 
-    y: function() { return y; },
-    width: function() { return width; },
-    height: function() { return width * (10 / 7); },
+    xlength: width,
+    width: function() 
+    { 
+      var self = this;
+      return self.xlength; 
+    },
+    height: function() 
+    { 
+      var self = this;
+      return self.width() * (10 / 7); 
+    },
+
+    xcoor: x,
+    ycoor: y,
     fillStyle: 'white',
     shadowBlur: 5.0,
     shadowColor: 'black',
     shadowOffsetX: 1.0,
     shadowOffsetY: 1.0,
     radius: 3,
+    deg: deg,
+
+    x: function() 
+    { 
+      var self = this;
+      return self.xcoor; 
+    },
+
+    y: function() 
+    { 
+      var self = this;
+      return self.ycoor; 
+    },
+
+    rotate: function() 
+    { 
+      var self = this;
+      return self.deg; 
+    },
+
+    fbid: fbid,
+    alpha: alpha,
   });
 
   var photo = createImageView({
