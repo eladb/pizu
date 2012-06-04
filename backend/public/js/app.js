@@ -68,10 +68,10 @@ $(function() {
       navigator.accelerometer.watchAcceleration(function (acceleration) {
         alert("watchAcceleration sucess");
         var changes = {};
-        alert("test");
         bound = 0.2;
-        alert("bound "+bound);
+        
         if (previousReading.x !== null) {
+            alert("test");
             changes.x = Math.abs(previousReading.x, acceleration.x);
             changes.y = Math.abs(previousReading.y, acceleration.y);
             changes.z = Math.abs(previousReading.z, acceleration.z);
@@ -83,11 +83,13 @@ $(function() {
             }
         }
 
+        alert("test2");
         previousReading = {
         x: reading.x,
         y: reading.y,
         z: reading.z
-        };
+        }
+
         alert("previousReading X " + previousReading.x + " Y " + previousReading.y + " Z " + previousReading.z);
 
         }, onError, { frequency: 3000 });
