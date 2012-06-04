@@ -260,6 +260,7 @@ $(function() {
         obj.src = img.src;
         obj.state = 'out';
         friends.bigImg = null;      
+        var context = canvas.getContext('2d'); 
 
         function openImage() {
           obj.bringToTop();
@@ -286,7 +287,7 @@ $(function() {
 
             obj.width += v * m;
             obj.height += v * m;
-            obj.onclick = null;
+            //obj.onclick = null;
             obj.x = centerX - obj.width / 2;
             obj.y = centerY - obj.height / 2;
 
@@ -309,8 +310,43 @@ $(function() {
             }
           }, 10);
         };
+        
+        function shakeImage() {
+          obj.bringToTop();
+          obj.deg = 45;
+          var counter = 0;
 
-        obj.onclick = openImage;
+          var iv = setInterval(function() {
+            // Shake
+            obj.deg *= -1;
+            counter++;
+            if (counter >= 20) { //2 secs
+              obj.deg = 0;
+              clearInterval(iv);
+              dropImage();
+            }
+          }, 100);
+        };
+
+        function dropImage() {
+          obj.bringToTop();
+
+          var iv = setInterval(function() {
+            obj.y += 
+              (obj.height / 2) + 
+              (obj.y / 7); //Acceleration
+
+            obj.alpha -= 0.1  
+            if (obj.y + obj.height >= canvas.height) {
+              clearInterval(iv);
+              obj.visible = false;
+            } 
+          }, 30);
+        };
+
+        obj.onclick = openImage;        
+        obj.ondrop = shakeImage;
+
         x += SZ;
 
         if (x > canvas.width) {

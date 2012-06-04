@@ -52,6 +52,8 @@ function createLayer() {
   };
 }
 
+var TO_RADIANS = Math.PI/180; 
+
 function createImage(img, x, y, w, h, alpha, deg) {
   return {
     img: img,
@@ -71,7 +73,7 @@ function createImage(img, x, y, w, h, alpha, deg) {
       var centerY = (this.y + this.height / 2);
       ctx.save();
       ctx.translate(centerX, centerY);
-      ctx.rotate(deg);
+      ctx.rotate(this.deg * TO_RADIANS);
       ctx.translate(-centerX, -centerY);
       ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
       ctx.restore();
