@@ -83,6 +83,7 @@ $(function() {
             changes.z = Math.abs(previousReading.z - acceleration.z);
 
             //alert("changes " + changes.x +","+changes.y+","+changes.z );
+            alert("changes " + changes.x);
 
             //if (changes.x > bound && changes.y > bound && changes.z > bound) {
             if (changes.x > bound) {
