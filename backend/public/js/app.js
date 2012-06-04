@@ -4,11 +4,14 @@ $(function() {
 
   $('#content').hide();
 
+  var cid = null;
+  var name = null;
+
   function after_login() {
     FB.api('/me', function(response) {
-      $('#name').attr('value', response.name);
-      $('#cid').attr('value', response.id);
-      $('#content').show();
+      name = response.name;
+      cid = response.id;
+      showMyImage();
     });
   }
 
@@ -50,40 +53,29 @@ $(function() {
   });
 
 
-  $('#pair').click(function(e) {
-    e.preventDefault();
-
-    if ($('#pair').hasClass('disabled')) {
+  function pair() {
+    if (!cid || !name) {
+      console.error('still not logged in');
       return;
     }
 
-    // Clear results of previous pairing
-    $('#mutual').empty();
-    
-    var name = $('#name').attr('value');
-    var cid = $('#cid').attr('value');
-
-    if (navigator.geolocation) 
-    {
-        navigator.geolocation.getCurrentPosition( 
- 
-        function (position) {  
- 
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {  
         console.log(position);
 
         var geoHash = encodeGeoHash(position.coords.latitude, position.coords.longitude);
         console.log('geoHash: ' + geoHash);
-        //alert('Hash:' + geoHash);
-        // Take the first 7 chars to have an accuracy of ~70 meters
+
         geoHash = geohash.slice(0,7);
 
         console.log('geoHash after slice: ' + geoHash);
         console.log('name=%s cid=%d', name, cid);
-        //alert('Lan:' + position.coords.latitude + ' Lon:' + position.coords.longitude + ' Hash:' + geoHash);
 
         var url = '/?sid=' + geoHash + '&cid=' + cid;
 
         $('#pair').addClass('disabled');
+
+        console.log('sending post request', url);
 
         $.ajax({
           type: 'post',
@@ -105,15 +97,11 @@ $(function() {
               var fbid = other.fbid;
 
               var graph = '/me/mutualfriends/' + fbid;
-              console.log(graph);
 
               FB.api(graph, function(res) {
                 console.log('response:'+JSON.stringify(res));
-                res.data.forEach(function(friend) {
-                  var imgsrc = 'https://graph.facebook.com/' + friend.id + '/picture';
-                  var li = $('<li><img src="' + imgsrc + '">' + friend.name + '</li>');
-                  $('#mutual').append(li);
-                });
+                var friends = res.data;
+                showFriends(friends);
               });
             }
           }
@@ -121,32 +109,124 @@ $(function() {
           $('#pair').removeClass('disabled');
           alert(body);
         });
-    
-        }, 
-        // next function is the error callback
-        function (error)
+      }, function (error) {
+        switch(error.code) 
         {
-          switch(error.code) 
-          {
-            case error.TIMEOUT:
-              alert ('Timeout');
-              break;
-            case error.POSITION_UNAVAILABLE:
-              alert ('Position unavailable');
-              break;
-            case error.PERMISSION_DENIED:
-              alert ('Permission denied');
-              break;
-            case error.UNKNOWN_ERROR:
-              alert ('Unknown error');
-              break;
-          }
+          case error.TIMEOUT:
+            alert ('Timeout');
+            break;
+          case error.POSITION_UNAVAILABLE:
+            alert ('Position unavailable');
+            break;
+          case error.PERMISSION_DENIED:
+            alert ('Permission denied');
+            break;
+          case error.UNKNOWN_ERROR:
+            alert ('Unknown error');
+            break;
         }
-        );
-      }
-    //}
-    //else // finish the error checking if the client is not compliant with the spec
+      });
+    }
+  }
 
-    
-  });
+  var layer = createLayer();
+  var canvas = $('canvas')[0];
+  canvasize(canvas, layer);
+
+  function showMyImage() {
+    FB.api('/me/picture', function(imageURL) {
+      var meImage = new Image();
+      meImage.src = imageURL;
+      meImage.onload = function() {
+        var w = meImage.width * 2;
+        var h = meImage.height * 2;
+
+        var obj = createImage(meImage, canvas.width / 2 - w, canvas.height / 2 - h, w, h);
+        obj.onclick = function() {
+          if (!this.visible) return;
+          this.visible = false;
+          pair();
+        };
+
+        layer.add(obj);
+      };
+    });
+  }
+
+  function showFriends(friends) {
+    var x = 50;
+    var y = 0;
+    var SZ = 50;
+    var queue = [];
+
+    setInterval(function() {
+      var i = queue.shift();
+      if (i) layer.add(i);
+    }, 10);
+
+    return friends.forEach(function(friend) {
+      var imageURL = 'https://graph.facebook.com/' + friend.id + '/picture';
+      var img = new Image();
+      img.src = imageURL;
+      img.onload = function() {
+
+        var obj = createImage(img, x, y, SZ, SZ);
+        obj.friend = friend;
+        obj.src = img.src;
+
+        function openImage() {
+          obj.bringToTop();
+
+          var centerX = obj.x + obj.width / 2;
+          var centerY = obj.y + obj.height / 2;
+          var state = 'out';
+          var v = 10;
+
+          var iv = setInterval(function() {
+            var m = state === 'out' ? 1 : -1;
+
+            obj.width += v * m;
+            obj.height += v * m;
+            obj.onclick = null;
+            obj.x = centerX - obj.width / 2;
+            obj.y = centerY - obj.height / 2;
+
+            if (obj.width > 200) {
+              state = 'in';
+            }
+
+            if (obj.width <= SZ) {
+              obj.width = SZ;
+              obj.height = SZ;
+              clearInterval(iv);
+              obj.onclick = openImage;
+            }
+          }, 10);
+        };
+
+        obj.onclick = openImage;
+
+        x += SZ;
+  
+        if (x > canvas.width) {
+          y += SZ;
+          x = 0;
+        }
+
+        queue.push(obj);
+      }
+    });
+  }
+
+  var refreshImage = new Image();
+  refreshImage.src = 'img/refresh.png';
+  var refreshButton = null;
+  refreshImage.onload = function() {
+    console.log('adding refresh');
+    refreshButton = createImage(refreshImage, 0, 0, 50, 50);
+    refreshButton.onclick = function() {
+      window.location.reload();
+    };
+    layer.add(refreshButton);
+  };
 });

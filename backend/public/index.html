@@ -1,49 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--<link rel='stylesheet' type='text/css' href='css/bootstrap.min.css'/>-->
-  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="css/iphone.css" type="text/css" />
-  <link rel="stylesheet" href="css/app.css" type="text/css" />
   <script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
-  <!--<script src="js/bootstrap.min.js" type="text/javascript"></script>-->
   <script src="js/facebook_js_sdk.js"></script>
   <script src='js/cordova-1.7.0.js' type='text/javascript'></script>
   <script src='js/cdv-plugin-fb-connect.js' type='text/javascript'></script>
   <script src="js/geohash.js" type="text/javascript"></script>
+  <script src='js/canvasizer.js' type='text/javascript'></script>
   <script src="js/app.js" type="text/javascript"></script>
+ <style>
+    body {
+      padding: 0px;
+      margin: 0px;
+    }
+    canvas {
+      background-color: black;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </head>
 <div id="fb-root"></div>
 <body>
-  <h1>Pizu Poncho</h1>
-  <form id='content' class="form-horizontal">
-    <fieldset>
-      <div class="control-group">
-        <label class="control-label" for="name">Client ID:</label>
-        <div class="controls">
-          <input class="input-xlarge focused" id="cid" type="text">
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label" for="name">Your name:</label>
-        <div class="controls">
-          <input class="input-xlarge focused" id="name" type="text">
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label">Paired with:</label>
-        <div class="controls">
-          <span class="input-xlarge uneditable-input" id='other'>Unpaired</span>
-        </div>
-      </div>
-      <div class="form-actions">
-        <button id='pair' class="btn btn-primary">Pair</button>
-        <button id='refresh' class="btn">Refresh</button>
-      </div>
-    </fieldset>
-
-    <ul id='mutual'>
-    </ul>
-  </form>
-
+  <canvas></canvas>
 </body>
 </html>
