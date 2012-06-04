@@ -17,9 +17,9 @@ $(function() {
       name = response.name;
       cid = response.id;
 
-      //FB.api('/me/friends', function(friendsData) {
-      //  showFriends(friendsData.data);
-      //});
+      FB.api('/me/friends', function(friendsData) {
+        showFriends(friendsData.data);
+      });
       
     });
   }
@@ -59,7 +59,7 @@ $(function() {
     
    // Start watching the acceleration
    function startWatch() {
-
+      alert("startWatch");
       if (!('accelerometer' in navigator)) {
         console.log('no accelerometer')
         return;
