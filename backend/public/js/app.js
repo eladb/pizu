@@ -94,7 +94,7 @@ $(function() {
             //  }
               //alert("changes " + changes.y);
               //shaken();
-            }
+            //}
         }
         else {
           previousReading = {
