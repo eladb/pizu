@@ -114,6 +114,9 @@ $(function() {
       alert('onError!');
   }
 
+  var layer = createLayer();
+  var canvas = $('canvas')[0];
+
   function pair() {
     if (!cid || !name) {
       console.error('still not logged in');
@@ -167,7 +170,12 @@ $(function() {
               FB.api(graph, function(res) {
                 console.log('response:'+JSON.stringify(res));
                 var friends = res.data;
-                showFriends(friends);
+                //showFriends(friends);
+                friends.forEach(function(friend) {
+                  Object.keys(layer.objects).forEach(function(key){
+                    if (friend.id == layer.objects[key].fbid) { layer.objects[key].ondrop(); };
+                  });  
+                });
               });
             }
           }
@@ -195,8 +203,7 @@ $(function() {
     }
   }
 
-  var layer = createLayer();
-  var canvas = $('canvas')[0];
+  
   canvasize(canvas, layer);
 
   function showMyImage() {

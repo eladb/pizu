@@ -54,11 +54,12 @@ function createLayer() {
 
 var TO_RADIANS = Math.PI/180; 
 
-function createImage(img, x, y, w, h, alpha, deg) {
+function createImage(img, x, y, w, h, alpha, deg, fbid) {
   return {
     img: img,
     alpha: alpha || 1.0,
     deg : deg || 0.0,
+    fbid : fbid || 0,
     visible: true,
     x: x,
     y: y,
