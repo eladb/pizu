@@ -87,7 +87,7 @@ $(function() {
         x: reading.x,
         y: reading.y,
         z: reading.z
-        }
+        };
         alert("previousReading X " + previousReading.x + " Y " + previousReading.y + " Z " + previousReading.z);
 
         }, onError, { frequency: 3000 });
