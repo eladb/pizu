@@ -70,9 +70,9 @@ $(function() {
 
       navigator.accelerometer.watchAcceleration(function (acceleration) {
         var changes = {};
-        bound = 0.2;
+        bound = 1;
         
-        alert("isShaken " + isShaken );
+        //alert("isShaken " + isShaken );
 
         if (previousReading.x !== null || isShaken == "true" ) {
             changes.x = Math.abs(previousReading.x - acceleration.x);
