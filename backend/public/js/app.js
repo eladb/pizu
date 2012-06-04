@@ -1,8 +1,7 @@
 var APP_ID = '146577522141106';
 
 // TODO: remove, used only for dev.
-//var firendsData = [{"name":"Yael Peled Adam","id":"8618149"},{"name":"Ella Ben-Tov","id":"522034861"},{"name":"Ronit Reger","id":"522239234"},{"name":"Ilya Sakharov","id":"540044215"},{"name":"Tal Goldbloom","id":"555329200"},{"name":"Gabi Perry","id":"559148860"},{"name":"Yoni Shtein","id":"560091387"},{"name":"Amit Apple","id":"563538726"},{"name":"Avi Carmon","id":"581266131"},{"name":"Raviv Tamir","id":"594729116"},{"name":"Revital Ben-Hamo","id":"617232453"},{"name":"Gilad Elyashar","id":"625611013"},{"name":"Ariela Boursi","id":"628311325"},{"name":"Ilay Roitman","id":"634048237"},{"name":"Dror Cohen","id":"670223584"},{"name":"Eran Gonen","id":"674748651"},{"name":"Shahar Yekutiel","id":"680956963"},{"name":"Ravit Tal","id":"685176459"},{"name":"Zack Dvey-Aharon","id":"691683727"},{"name":"Eran Shahar","id":"700493001"},{"name":"Chen Tsofi","id":"708162492"},{"name":"Eyal Badash","id":"708591957"},{"name":"Ran Levitzky","id":"712741345"},{"name":"Polina Krimshtein","id":"741780149"},{"name":"Ami Turgman","id":"744673514"},{"name":"Revital Barletz","id":"744777534"},{"name":"Itai Frenkel","id":"747008278"},{"name":"Einam Schonberg","id":"758049829"},{"name":"Sharon Gingold","id":"776872499"},{"name":"Edo Yahav","id":"809953065"},{"name":"Avigad Oron","id":"832032368"},{"name":"Oded Nahir","id":"1032228138"},{"name":"Shai Ber","id":"100000404810108"},{"name":"Noam Keidar","id":"100000454296282"},{"name":"Alexander Sloutsky","id":"100001315798911"},{"name":"Ron Dar Ziv","id":"100001779702520"},{"name":"Sivan Krigsman","id":"100001873082153"},{"name":"Yoav Helfman","id":"100002066173780"}];
-//var meData = {"name":"Elad Ben-Israel","id":"620032"};  
+//var firendsData = [{"name":"Elad Ben-Israel","id":"620032"}, {"name":"Yael Peled Adam","id":"8618149"},{"name":"Ella Ben-Tov","id":"522034861"},{"name":"Ronit Reger","id":"522239234"},{"name":"Ilya Sakharov","id":"540044215"},{"name":"Tal Goldbloom","id":"555329200"},{"name":"Gabi Perry","id":"559148860"},{"name":"Yoni Shtein","id":"560091387"},{"name":"Amit Apple","id":"563538726"},{"name":"Avi Carmon","id":"581266131"},{"name":"Raviv Tamir","id":"594729116"},{"name":"Revital Ben-Hamo","id":"617232453"},{"name":"Gilad Elyashar","id":"625611013"},{"name":"Ariela Boursi","id":"628311325"},{"name":"Ilay Roitman","id":"634048237"},{"name":"Dror Cohen","id":"670223584"},{"name":"Eran Gonen","id":"674748651"},{"name":"Shahar Yekutiel","id":"680956963"},{"name":"Ravit Tal","id":"685176459"},{"name":"Zack Dvey-Aharon","id":"691683727"},{"name":"Eran Shahar","id":"700493001"},{"name":"Chen Tsofi","id":"708162492"},{"name":"Eyal Badash","id":"708591957"},{"name":"Ran Levitzky","id":"712741345"},{"name":"Polina Krimshtein","id":"741780149"},{"name":"Ami Turgman","id":"744673514"},{"name":"Revital Barletz","id":"744777534"},{"name":"Itai Frenkel","id":"747008278"},{"name":"Einam Schonberg","id":"758049829"},{"name":"Sharon Gingold","id":"776872499"},{"name":"Edo Yahav","id":"809953065"},{"name":"Avigad Oron","id":"832032368"},{"name":"Oded Nahir","id":"1032228138"},{"name":"Shai Ber","id":"100000404810108"},{"name":"Noam Keidar","id":"100000454296282"},{"name":"Alexander Sloutsky","id":"100001315798911"},{"name":"Ron Dar Ziv","id":"100001779702520"},{"name":"Sivan Krigsman","id":"100001873082153"},{"name":"Yoav Helfman","id":"100002066173780"}];
 
 $(function() {
 
@@ -15,7 +14,10 @@ $(function() {
     FB.api('/me', function(response) {
       name = response.name;
       cid = response.id;
-      showMyImage();
+
+      FB.api('/me/friends', function(friendsData) {
+        showFriends(friendsData.data);
+      });
       startWatch();
     });
   }
@@ -113,16 +115,11 @@ $(function() {
       alert('onError!');
   }
 
-
   function pair() {
     if (!cid || !name) {
       console.error('still not logged in');
       return;
     }
-    
-    // TODO: remove
-    //showFriends(firendsData)
-    //return; 
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {  
@@ -230,45 +227,45 @@ $(function() {
       if (i) layer.add(i);
     }, 10);
 
-    var duplicates = canvas.width / SZ * canvas.height / SZ / friends.length;
-    var shownFriends = []
-    friends.forEach(function(f) {
-      for (var i = 0; i < duplicates; i++) {
-        shownFriends.push(f);
-      }
-    });
-
-    return shownFriends.forEach(function(friend) {
+    return friends.forEach(function(friend) {
       var imageURL = 'https://graph.facebook.com/' + friend.id + '/picture';
       var img = new Image();
       img.src = imageURL;
-      
-
 
       img.onload = function() {
         
         var deg = Math.random()*2 - 1;
-        console.log(deg);
-        x = Math.floor(Math.random() * canvas.width + 1);
-        y = Math.floor(Math.random() * canvas.height + 1);
+        x = Math.floor(Math.random() * (canvas.width - 50) + 25);
+        y = Math.floor(Math.random() * (canvas.height - 200) + 25);
         var obj = createImage(img, x, y, SZ, SZ, null, deg);
       
         obj.friend = friend;
         obj.src = img.src;
-
-      
+        obj.state = 'out';
+        friends.bigImg = null;      
 
         function openImage() {
-
           obj.bringToTop();
 
           var centerX = obj.x + obj.width / 2;
-          var centerY = obj.y + obj.height / 2;
-          var state = 'out';
+          var centerY = obj.y + obj.height / 2;          
+          
           var v = 10;
 
           var iv = setInterval(function() {
-            var m = state === 'out' ? 1 : -1;
+            var m = obj.state === 'out' ? 1 : -1;
+            if (friends.bigImg && friends.bigImg != obj) {
+              friends.bigImg.onclick = null;
+              friends.bigImg.width -= v;
+              friends.bigImg.height -= v;
+              if (friends.bigImg.width <= SZ) {
+                friends.bigImg.width = SZ;
+                friends.bigImg.height = SZ;
+                clearInterval(iv);
+                friends.bigImg.onclick = openImage;
+                friends.bigImg.state = 'out';
+              }
+            }
 
             obj.width += v * m;
             obj.height += v * m;
@@ -276,15 +273,22 @@ $(function() {
             obj.x = centerX - obj.width / 2;
             obj.y = centerY - obj.height / 2;
 
-            if (obj.width > 200) {
-              state = 'in';
+            if (obj.width >= 200) {
+              obj.width = 200;
+              obj.height = 200;
+              clearInterval(iv);
+              obj.onclick = openImage;
+              friends.bigImg = obj;
+              obj.state = 'in';
             }
 
             if (obj.width <= SZ) {
               obj.width = SZ;
               obj.height = SZ;
               clearInterval(iv);
-              obj.onclick = openImage;
+              obj.onclick = openImage;            
+              friends.bigImg = null;
+              obj.state = 'out';
             }
           }, 10);
         };
@@ -307,10 +311,23 @@ $(function() {
   var refreshButton = null;
   refreshImage.onload = function() {
     console.log('adding refresh');
-    refreshButton = createImage(refreshImage, 0, 0, 50, 50);
+    refreshButton = createImage(refreshImage, canvas.width / 3, canvas.height - 70, 50, 50);
     refreshButton.onclick = function() {
       window.location.reload();
     };
     layer.add(refreshButton);
   };
+
+  var pairImage = new Image();
+  pairImage.src = 'img/search.png';
+  var pairButton = null;
+  pairImage.onload = function() {
+    console.log('adding pair');
+    pairButton = createImage(pairImage, canvas.width / 3 * 2, canvas.height - 70, 50, 50);
+    pairButton.onclick = function() {
+      pair();
+    };
+    layer.add(pairButton);
+  };
+
 });
