@@ -68,7 +68,9 @@ $(function() {
       navigator.accelerometer.watchAcceleration(function (acceleration) {
         alert("watchAcceleration sucess");
         var changes = {},
+        alert("test");
         bound = 0.2;
+        alert("bound "+bound);
         if (previousReading.x !== null) {
             changes.x = Math.abs(previousReading.x, acceleration.x);
             changes.y = Math.abs(previousReading.y, acceleration.y);
