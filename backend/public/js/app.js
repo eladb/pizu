@@ -81,17 +81,22 @@ $(function() {
 
             //alert("changes " + changes.x +","+changes.y+","+changes.z );
 
-            //if (changes.x > bound && changes.y > bound && changes.z > bound) {
-            if (changes.x > bound) {
+            if (changes.x > bound && changes.y > bound && changes.z > bound) {
+              previousReading = {
+                  x: null,
+                  y: null,
+                  z: null
+              }
               shaken();
             }
         }
-
-        previousReading = {
-        x: acceleration.x,
-        y: acceleration.y,
-        z: acceleration.z
+        else {
+          previousReading = {
+          x: acceleration.x,
+          y: acceleration.y,
+          z: acceleration.z
         }
+      }
         
         }, onError, { frequency: 100 });
   }
