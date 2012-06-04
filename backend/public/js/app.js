@@ -58,7 +58,7 @@ $(function() {
 
    // Start watching the acceleration
    function startWatch() {
-
+      alert("StartWatch");
       var previousReading = {
           x: null,
           y: null,
@@ -72,10 +72,12 @@ $(function() {
             changes.x = Math.abs(previousReading.x, acceleration.x);
             changes.y = Math.abs(previousReading.y, acceleration.y);
             changes.z = Math.abs(previousReading.z, acceleration.z);
-        }
 
-        if (changes.x > bound && changes.y > bound && changes.z > bound) {
-          shaken();
+            alert("changes X " + changes.x + " Y " + changes.y + " Z " + changes.z);
+
+            if (changes.x > bound && changes.y > bound && changes.z > bound) {
+              shaken();
+            }
         }
 
         previousReading = {
@@ -83,6 +85,7 @@ $(function() {
         y: reading.y,
         z: reading.z
         }
+        alert("previousReading X " + previousReading.x + " Y " + previousReading.y + " Z " + previousReading.z);
 
         }, onError, { frequency: 2000 });
   }
