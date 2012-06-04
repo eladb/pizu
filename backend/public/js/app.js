@@ -342,6 +342,7 @@ $(function() {
     console.log('adding pair');
     pairButton = createImage(pairImage, canvas.width / 3 * 2, canvas.height - 70, 50, 50);
     pairButton.onclick = function() {
+      console.log('pairing...');
       pair();
     };
     layer.add(pairButton);

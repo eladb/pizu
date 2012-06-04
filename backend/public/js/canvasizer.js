@@ -35,7 +35,6 @@ function createLayer() {
       for (var i = keys.length - 1; i >= 0; i--) {
         var obj = self._objects[keys[i]];
         if (obj.hittest && obj.hittest(x, y)) {
-          console.log('yeah!');
           obj.onclick.call(obj, x, y);
           break;
         }
@@ -192,9 +191,6 @@ function createView(view) {
     var y = self.y();
     var w = self.width();
     var h = self.height();
-
-    console.log(x,y,w,h);
-    console.log(ex, ey);
 
     return (ex >= x && ex <= x + w && 
             ey >= y && ey <= y + h);
