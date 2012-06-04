@@ -248,12 +248,12 @@ $(function() {
       
       img.onload = function() {
         
-        var deg = Math.random()*2 - 1;
+        var deg = Math.random()*360 - 180;
         x = Math.floor(Math.random() * (canvas.width - 50) + 25);
         y = Math.floor(Math.random() * (canvas.height - 200) + 25);
 
         // var obj = createImage(img, x, y, SZ, SZ, null, deg);
-        var obj = createPolaroid(img, x, y, SZ, friend.name);
+        var obj = createPolaroid(img, x, y, SZ, friend.name, null, deg, friend.id);
         obj.rotate = function() { return deg; };
       
         obj.friend = friend;
@@ -396,7 +396,7 @@ function createText(view) {
   return self;
 }
 
-function createPolaroid(im, x, y, width, label) {
+function createPolaroid(im, x, y, width, label, alpha, deg, fbid) {
 
   var rect = createRectangleView({ 
     x: function() { return x; }, 
@@ -409,6 +409,9 @@ function createPolaroid(im, x, y, width, label) {
     shadowOffsetX: 1.0,
     shadowOffsetY: 1.0,
     radius: 3,
+    deg: deg,
+    fbid: fbid,
+    alpha: alpha,
   });
 
   var photo = createImageView({
