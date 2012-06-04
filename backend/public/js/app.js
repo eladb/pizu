@@ -71,9 +71,9 @@ $(function() {
           z: null
       }
 
-      navigator.accelerometer.watchAcceleration(function (acceleration) {
+      watchID = navigator.accelerometer.watchAcceleration(function (acceleration) {
         var changes = {};
-        bound =12;
+        bound =15;
         
         //alert("isShaken " + isShaken );
 
@@ -99,12 +99,14 @@ $(function() {
         
       }
         
-        }, onError, { frequency: 500 });
+        }, onError, { frequency: 100 });
   }
 
   function shaken(){
+      navigator.accelerometer.clearWatch(watchID);
       navigator.notification.vibrate(2500);
-      //pair();
+      pair();
+      startWatch();
   }
 
   // Error
