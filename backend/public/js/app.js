@@ -73,7 +73,7 @@ $(function() {
 
       navigator.accelerometer.watchAcceleration(function (acceleration) {
         var changes = {};
-        bound =15;
+        bound =20;
         
         //alert("isShaken " + isShaken );
 
