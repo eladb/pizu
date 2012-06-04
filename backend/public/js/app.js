@@ -105,7 +105,7 @@ $(function() {
 
   function shaken(){
       navigator.accelerometer.clearWatch(watchID);
-      alert("clearWatch");
+      alert("clearWatch " + watchID);
       navigator.notification.vibrate(2500);
       pair();
       startWatch();
@@ -126,13 +126,8 @@ $(function() {
     }
     
     //if (development) {
-<<<<<<< HEAD
     //  showFriends(development.friends);
     //  return; 
-=======
-      //showFriends(development.friends);
-      //return; 
->>>>>>> fixing issues and integrating with Leon
     //}
 
     if (navigator.geolocation) {
