@@ -73,7 +73,7 @@ $(function() {
 
       navigator.accelerometer.watchAcceleration(function (acceleration) {
         var changes = {};
-        bound =15;
+        bound =12;
         
         //alert("isShaken " + isShaken );
 
@@ -99,7 +99,7 @@ $(function() {
         
       }
         
-        }, onError, { frequency: 1000 });
+        }, onError, { frequency: 500 });
   }
 
   function shaken(){
