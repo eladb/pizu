@@ -86,7 +86,7 @@ $(function() {
             //alert("changes " + changes.x);
 
             //if (changes.x > bound && changes.y > bound && changes.z > bound) {
-            if (changes.x > bound && changes.y > bound) {
+            if (changes.x > bound && changes.y > bound/2) {
               //alert("changes " + changes.y);
               shaken();
             }
