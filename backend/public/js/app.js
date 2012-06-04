@@ -12,6 +12,7 @@ $(function() {
   var name = null;
 
   function after_login() {
+    startWatch();
     FB.api('/me', function(response) {
       name = response.name;
       cid = response.id;
@@ -19,7 +20,7 @@ $(function() {
       FB.api('/me/friends', function(friendsData) {
         showFriends(friendsData.data);
       });
-      startWatch();
+      
     });
   }
   var browser = 
@@ -91,6 +92,7 @@ $(function() {
                   y: null,
                   z: null
               }
+              alert("changes " + changes.z);
               shaken();
             }
         }
@@ -107,7 +109,7 @@ $(function() {
 
   function shaken(){
       navigator.notification.vibrate(2500);
-      pair();
+      //pair();
   }
 
   // Error
