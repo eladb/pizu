@@ -66,6 +66,7 @@ $(function() {
       }
 
       navigator.accelerometer.watchAcceleration(function (acceleration) {
+        alert("watchAcceleration sucess");
         var changes = {},
         bound = 0.2;
         if (previousReading.x !== null) {
@@ -87,7 +88,7 @@ $(function() {
         }
         alert("previousReading X " + previousReading.x + " Y " + previousReading.y + " Z " + previousReading.z);
 
-        }, onError, { frequency: 2000 });
+        }, onError, { frequency: 3000 });
   }
 
   function shaken(){
