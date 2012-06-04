@@ -59,7 +59,7 @@ $(function() {
     
    // Start watching the acceleration
    function startWatch() {
-      alert("startWatch");
+      
       if (!('accelerometer' in navigator)) {
         console.log('no accelerometer')
         return;
@@ -71,6 +71,7 @@ $(function() {
           z: null
       }
 
+      alert("startWatch");
       watchID = navigator.accelerometer.watchAcceleration(function (acceleration) {
         var changes = {};
         bound =15;
@@ -104,6 +105,7 @@ $(function() {
 
   function shaken(){
       navigator.accelerometer.clearWatch(watchID);
+      alert("clearWatch");
       navigator.notification.vibrate(2500);
       pair();
       startWatch();
