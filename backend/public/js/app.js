@@ -1,11 +1,12 @@
 var APP_ID = '146577522141106';
 
 // TODO: remove, used only for dev.
-//var firendsData = [{"name":"Elad Ben-Israel","id":"620032"}, {"name":"Yael Peled Adam","id":"8618149"},{"name":"Ella Ben-Tov","id":"522034861"},{"name":"Ronit Reger","id":"522239234"},{"name":"Ilya Sakharov","id":"540044215"},{"name":"Tal Goldbloom","id":"555329200"},{"name":"Gabi Perry","id":"559148860"},{"name":"Yoni Shtein","id":"560091387"},{"name":"Amit Apple","id":"563538726"},{"name":"Avi Carmon","id":"581266131"},{"name":"Raviv Tamir","id":"594729116"},{"name":"Revital Ben-Hamo","id":"617232453"},{"name":"Gilad Elyashar","id":"625611013"},{"name":"Ariela Boursi","id":"628311325"},{"name":"Ilay Roitman","id":"634048237"},{"name":"Dror Cohen","id":"670223584"},{"name":"Eran Gonen","id":"674748651"},{"name":"Shahar Yekutiel","id":"680956963"},{"name":"Ravit Tal","id":"685176459"},{"name":"Zack Dvey-Aharon","id":"691683727"},{"name":"Eran Shahar","id":"700493001"},{"name":"Chen Tsofi","id":"708162492"},{"name":"Eyal Badash","id":"708591957"},{"name":"Ran Levitzky","id":"712741345"},{"name":"Polina Krimshtein","id":"741780149"},{"name":"Ami Turgman","id":"744673514"},{"name":"Revital Barletz","id":"744777534"},{"name":"Itai Frenkel","id":"747008278"},{"name":"Einam Schonberg","id":"758049829"},{"name":"Sharon Gingold","id":"776872499"},{"name":"Edo Yahav","id":"809953065"},{"name":"Avigad Oron","id":"832032368"},{"name":"Oded Nahir","id":"1032228138"},{"name":"Shai Ber","id":"100000404810108"},{"name":"Noam Keidar","id":"100000454296282"},{"name":"Alexander Sloutsky","id":"100001315798911"},{"name":"Ron Dar Ziv","id":"100001779702520"},{"name":"Sivan Krigsman","id":"100001873082153"},{"name":"Yoav Helfman","id":"100002066173780"}];
+var development = {
+  friends: [{"name":"Yael Peled Adam","id":"8618149"},{"name":"Ella Ben-Tov","id":"522034861"},{"name":"Ronit Reger","id":"522239234"},{"name":"Ilya Sakharov","id":"540044215"},{"name":"Tal Goldbloom","id":"555329200"},{"name":"Gabi Perry","id":"559148860"},{"name":"Yoni Shtein","id":"560091387"},{"name":"Amit Apple","id":"563538726"},{"name":"Avi Carmon","id":"581266131"},{"name":"Raviv Tamir","id":"594729116"},{"name":"Revital Ben-Hamo","id":"617232453"},{"name":"Gilad Elyashar","id":"625611013"},{"name":"Ariela Boursi","id":"628311325"},{"name":"Ilay Roitman","id":"634048237"},{"name":"Dror Cohen","id":"670223584"},{"name":"Eran Gonen","id":"674748651"},{"name":"Shahar Yekutiel","id":"680956963"},{"name":"Ravit Tal","id":"685176459"},{"name":"Zack Dvey-Aharon","id":"691683727"},{"name":"Eran Shahar","id":"700493001"},{"name":"Chen Tsofi","id":"708162492"},{"name":"Eyal Badash","id":"708591957"},{"name":"Ran Levitzky","id":"712741345"},{"name":"Polina Krimshtein","id":"741780149"},{"name":"Ami Turgman","id":"744673514"},{"name":"Revital Barletz","id":"744777534"},{"name":"Itai Frenkel","id":"747008278"},{"name":"Einam Schonberg","id":"758049829"},{"name":"Sharon Gingold","id":"776872499"},{"name":"Edo Yahav","id":"809953065"},{"name":"Avigad Oron","id":"832032368"},{"name":"Oded Nahir","id":"1032228138"},{"name":"Shai Ber","id":"100000404810108"},{"name":"Noam Keidar","id":"100000454296282"},{"name":"Alexander Sloutsky","id":"100001315798911"},{"name":"Ron Dar Ziv","id":"100001779702520"},{"name":"Sivan Krigsman","id":"100001873082153"},{"name":"Yoav Helfman","id":"100002066173780"}],
+  me: {"name":"Elad Ben-Israel","id":"620032"}
+};
 
 $(function() {
-
-  $('#content').hide();
 
   var cid = null;
   var name = null;
@@ -52,17 +53,18 @@ $(function() {
     });
   }, false);
 
-  $('#refresh').click(function(e) {
-    e.preventDefault();
-    alert('refreshed');
-    window.location.reload();
-  });
 
     // The watch id references the current `watchAcceleration`
     var watchID = null;
     
    // Start watching the acceleration
    function startWatch() {
+
+      if (!('accelerometer' in navigator)) {
+        console.log('no accelerometer')
+        return;
+      }
+
       var previousReading = {
           x: null,
           y: null,
@@ -116,6 +118,11 @@ $(function() {
     if (!cid || !name) {
       console.error('still not logged in');
       return;
+    }
+    
+    if (development) {
+      showFriends(development.friends);
+      return; 
     }
 
     if (navigator.geolocation) {
@@ -193,15 +200,25 @@ $(function() {
   canvasize(canvas, layer);
 
   function showMyImage() {
-    FB.api('/me/picture', function(imageURL) {
-    //FB.api('/' + meData.id + '/picture', function(imageURL) {
+    var meid = development ? development.me.id : 'me';
+    FB.api('/' + meid + '/picture', function(imageURL) {
       var meImage = new Image();
       meImage.src = imageURL;
       meImage.onload = function() {
         var w = meImage.width * 2;
-        var h = meImage.height * 2;
+        var obj = createPolaroid(meImage, 50, 50, w);
 
-        var obj = createImage(meImage, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+        // setInterval(function() {
+        //   var w = obj.width();
+        //   var h = obj.height();
+        //   var r = obj.rotate && (obj.rotate() || 0.0);
+
+        //   obj.width = function() { return w + 10 };
+        //   obj.height = function() { return h + 10 };
+        //   obj.rotate = function() { return r + 0.1 };
+
+        // }, 50);
+
         obj.onclick = function() {
           if (!this.visible) return;
           this.visible = false;
@@ -234,8 +251,10 @@ $(function() {
         var deg = Math.random()*2 - 1;
         x = Math.floor(Math.random() * (canvas.width - 50) + 25);
         y = Math.floor(Math.random() * (canvas.height - 200) + 25);
+
         // var obj = createImage(img, x, y, SZ, SZ, null, deg);
-        var obj = createPolaroid(img, x, y, SZ);
+        var obj = createPolaroid(img, x, y, SZ, friend.name);
+        obj.rotate = function() { return deg; };
       
         obj.friend = friend;
         obj.src = img.src;
@@ -330,38 +349,62 @@ $(function() {
 
 });
 
+function createText(view) {
+  var self = createView(view);
+  self.ondraw = function(ctx) {
+    if (self.text) {
+      ctx.fillText(self.text, 0, 0, self.width());
+    }
+  };
+  return self;
+}
 
-function createPolaroid(im, x, y, width) {
+function createPolaroid(im, x, y, width, label) {
 
-  var rect = createRectangle({ 
-    name: 'outer',
-    x: x, 
-    y: y, 
-    width: width, 
-    height: width * (100 / 70),
+  var rect = createRectangleView({ 
+    x: function() { return x; }, 
+    y: function() { return y; },
+    width: function() { return width; },
+    height: function() { return width * (10 / 7); },
     fillStyle: 'white',
-    shadowBlur: 1.5,
+    shadowBlur: 5.0,
     shadowColor: 'black',
-    shadowOffsetX: 0.5,
-    shadowOffsetY: 0.5,
-    radius: 2,
+    shadowOffsetX: 1.0,
+    shadowOffsetY: 1.0,
+    radius: 3,
   });
 
-  var innerRect = createRectangle({
-    name: 'inner',
-    width: rect.width * 0.8,
-    height: rect.height * 0.65,
-    x: rect.width / 2 - (rect.width * 0.8 / 2),
-    y: rect.height / 2.4 - (rect.height * 0.65 / 2),
+  var photo = createImageView({
+    img: im,
+    x: function() { return rect.width() / 2 - rect.width() * 0.8 / 2; },
+    y: function() { return rect.height() / 2.5 - rect.height() * 0.65 / 2; },
+    width: function() { return rect.width() * 0.8; },
+    height: function() { return rect.height() * 0.65; },
+  });
+
+  rect.add(photo);
+
+  var frame = createRectangleView({
+    x: function() { return 0; },
+    y: function() { return 0; },
+    width: function() { return photo.width(); },
+    height: function() { return photo.height(); },
     strokeStyle: 'black',
-    lineWidth: 2,
-    fillStyle: 'black',
+    lineWidth: 1,
+    radius: 1,
   });
 
-  var image = createImage(im, 0, 0, innerRect.width - 1, innerRect.height - 1);
+  photo.add(frame);
 
-  rect.add(innerRect);
-  innerRect.add(image);
+  var text = createText({
+    x: function() { return photo.x(); },
+    y: function() { return rect.height() - 5; },
+    width: function() { return photo.width() - 5; },
+    height: function() { return 0; },
+    text: label,
+  });
+
+  rect.add(text);
 
   return rect;
 }
