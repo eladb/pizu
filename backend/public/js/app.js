@@ -85,7 +85,7 @@ $(function() {
             //alert("changes " + changes.x);
 
             //if (changes.x > bound && changes.y > bound && changes.z > bound) {
-            if (changes.y > bound) {
+            if (changes.z > bound) {
               previousReading = {
                   x: null,
                   y: null,
