@@ -86,13 +86,13 @@ $(function() {
             //alert("changes " + changes.x);
 
             //if (changes.x > bound && changes.y > bound && changes.z > bound) {
-            if (changes.z > bound) {
+            if (changes.x > bound) {
               previousReading = {
                   x: null,
                   y: null,
                   z: null
               }
-              alert("changes " + changes.z);
+              alert("changes " + changes.x);
               shaken();
             }
         }
