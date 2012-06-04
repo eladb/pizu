@@ -120,10 +120,10 @@ $(function() {
       return;
     }
     
-    if (development) {
-      showFriends(development.friends);
-      return; 
-    }
+    //if (development) {
+    //  showFriends(development.friends);
+    //  return; 
+    //}
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {  
