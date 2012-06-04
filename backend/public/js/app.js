@@ -228,13 +228,14 @@ $(function() {
       var imageURL = 'https://graph.facebook.com/' + friend.id + '/picture';
       var img = new Image();
       img.src = imageURL;
-
+      
       img.onload = function() {
         
         var deg = Math.random()*2 - 1;
         x = Math.floor(Math.random() * (canvas.width - 50) + 25);
         y = Math.floor(Math.random() * (canvas.height - 200) + 25);
-        var obj = createImage(img, x, y, SZ, SZ, null, deg);
+        // var obj = createImage(img, x, y, SZ, SZ, null, deg);
+        var obj = createPolaroid(img, x, y, SZ);
       
         obj.friend = friend;
         obj.src = img.src;
@@ -328,3 +329,39 @@ $(function() {
   };
 
 });
+
+
+function createPolaroid(im, x, y, width) {
+
+  var rect = createRectangle({ 
+    name: 'outer',
+    x: x, 
+    y: y, 
+    width: width, 
+    height: width * (100 / 70),
+    fillStyle: 'white',
+    shadowBlur: 1.5,
+    shadowColor: 'black',
+    shadowOffsetX: 0.5,
+    shadowOffsetY: 0.5,
+    radius: 2,
+  });
+
+  var innerRect = createRectangle({
+    name: 'inner',
+    width: rect.width * 0.8,
+    height: rect.height * 0.65,
+    x: rect.width / 2 - (rect.width * 0.8 / 2),
+    y: rect.height / 2.4 - (rect.height * 0.65 / 2),
+    strokeStyle: 'black',
+    lineWidth: 2,
+    fillStyle: 'black',
+  });
+
+  var image = createImage(im, 0, 0, innerRect.width - 1, innerRect.height - 1);
+
+  rect.add(innerRect);
+  innerRect.add(image);
+
+  return rect;
+}
