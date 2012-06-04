@@ -57,38 +57,44 @@ $(function() {
     var watchID = null;
 
    // Start watching the acceleration
-   //
    function startWatch() {
-       // Update acceleration every 3 seconds
-       var options = { frequency: 2000 };
-       alert('StartWatch');
-       watchID = navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
-   }
 
-   // Stop watching the acceleration
-   //
-   function stopWatch() {
-       if (watchID) {
-           navigator.accelerometer.clearWatch(watchID);
-           watchID = null;
-       }
-   }
+      var previousReading = {
+          x: null,
+          y: null,
+          z: null
+      }
 
-    // acceleration onSuccess
-    //
-    function onSuccess(acceleration) {
-       alert('Acceleration X: ' + acceleration.x + '\n' +
-              'Acceleration Y: ' + acceleration.y + '\n' +
-              'Acceleration Z: ' + acceleration.z + '\n' +
-              'Timestamp: '      + acceleration.timestamp + '\n');
+      navigator.accelerometer.watchAcceleration(function (acceleration) {
+        var changes = {},
+        bound = 0.2;
+        if (previousReading.x !== null) {
+            changes.x = Math.abs(previousReading.x, acceleration.x);
+            changes.y = Math.abs(previousReading.y, acceleration.y);
+            changes.z = Math.abs(previousReading.z, acceleration.z);
+        }
 
-    }
+        if (changes.x > bound && changes.y > bound && changes.z > bound) {
+          shaken();
+        }
 
-    // onError: Failed to get the acceleration
-    //
-    function onError() {
-        alert('onError!');
-    }
+        previousReading = {
+        x: reading.x,
+        y: reading.y,
+        z: reading.z
+        }
+
+        }, onError, { frequency: 2000 });
+  }
+
+  function shaken(){
+      alert("Shaken");
+  }
+
+  // Error
+  function onError() {
+      alert('onError!');
+  }
 
 
   function pair() {
