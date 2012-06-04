@@ -67,7 +67,7 @@ $(function() {
 
       navigator.accelerometer.watchAcceleration(function (acceleration) {
         alert("watchAcceleration sucess");
-        var changes = {},
+        var changes = {};
         alert("test");
         bound = 0.2;
         alert("bound "+bound);
