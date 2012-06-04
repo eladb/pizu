@@ -72,10 +72,14 @@ $(function() {
         var changes = {};
         bound = 0.5;
         
-        if (previousReading.x !== null || isShaken === "true" ) {
+        alert("isShaken " isShaken );
+
+        if (previousReading.x !== null || isShaken == "true" ) {
             changes.x = Math.abs(previousReading.x, acceleration.x);
             changes.y = Math.abs(previousReading.y, acceleration.y);
             changes.z = Math.abs(previousReading.z, acceleration.z);
+
+            alert("changes " + changes.x +","+changes.y+","+changes.z );
 
             if (changes.x > bound && changes.y > bound && changes.z > bound) {
               shaken();
@@ -89,7 +93,7 @@ $(function() {
         }
 
 
-        }, onError, { frequency: 3000 });
+        }, onError, { frequency: 750 });
   }
 
   function shaken(){
