@@ -52,12 +52,15 @@ $(function() {
     window.location.reload();
   });
 
+    // The watch id references the current `watchAcceleration`
+    var watchID = null;
+
    // Start watching the acceleration
    //
    function startWatch() {
        // Update acceleration every 3 seconds
        var options = { frequency: 2000 };
-
+       alert('StartWatch');
        watchID = navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
    }
 
@@ -253,7 +256,7 @@ $(function() {
   }
 
   startWatch();
-  
+
   var refreshImage = new Image();
   refreshImage.src = 'img/refresh.png';
   var refreshButton = null;
