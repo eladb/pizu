@@ -1,5 +1,9 @@
 var APP_ID = '146577522141106';
 
+// TODO: remove, used only for dev.
+//var firendsData = [{"name":"Yael Peled Adam","id":"8618149"},{"name":"Ella Ben-Tov","id":"522034861"},{"name":"Ronit Reger","id":"522239234"},{"name":"Ilya Sakharov","id":"540044215"},{"name":"Tal Goldbloom","id":"555329200"},{"name":"Gabi Perry","id":"559148860"},{"name":"Yoni Shtein","id":"560091387"},{"name":"Amit Apple","id":"563538726"},{"name":"Avi Carmon","id":"581266131"},{"name":"Raviv Tamir","id":"594729116"},{"name":"Revital Ben-Hamo","id":"617232453"},{"name":"Gilad Elyashar","id":"625611013"},{"name":"Ariela Boursi","id":"628311325"},{"name":"Ilay Roitman","id":"634048237"},{"name":"Dror Cohen","id":"670223584"},{"name":"Eran Gonen","id":"674748651"},{"name":"Shahar Yekutiel","id":"680956963"},{"name":"Ravit Tal","id":"685176459"},{"name":"Zack Dvey-Aharon","id":"691683727"},{"name":"Eran Shahar","id":"700493001"},{"name":"Chen Tsofi","id":"708162492"},{"name":"Eyal Badash","id":"708591957"},{"name":"Ran Levitzky","id":"712741345"},{"name":"Polina Krimshtein","id":"741780149"},{"name":"Ami Turgman","id":"744673514"},{"name":"Revital Barletz","id":"744777534"},{"name":"Itai Frenkel","id":"747008278"},{"name":"Einam Schonberg","id":"758049829"},{"name":"Sharon Gingold","id":"776872499"},{"name":"Edo Yahav","id":"809953065"},{"name":"Avigad Oron","id":"832032368"},{"name":"Oded Nahir","id":"1032228138"},{"name":"Shai Ber","id":"100000404810108"},{"name":"Noam Keidar","id":"100000454296282"},{"name":"Alexander Sloutsky","id":"100001315798911"},{"name":"Ron Dar Ziv","id":"100001779702520"},{"name":"Sivan Krigsman","id":"100001873082153"},{"name":"Yoav Helfman","id":"100002066173780"}];
+//var meData = {"name":"Elad Ben-Israel","id":"620032"};  
+
 $(function() {
 
   $('#content').hide();
@@ -15,7 +19,6 @@ $(function() {
       startWatch();
     });
   }
-
   var browser = 
     navigator.userAgent.indexOf('Chrome') !== -1 ||
     navigator.userAgent.indexOf('Safari') !== -1;
@@ -110,6 +113,10 @@ $(function() {
       console.error('still not logged in');
       return;
     }
+    
+    // TODO: remove
+    //showFriends(firendsData)
+    //return; 
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function (position) {  
@@ -187,13 +194,14 @@ $(function() {
 
   function showMyImage() {
     FB.api('/me/picture', function(imageURL) {
+    //FB.api('/' + meData.id + '/picture', function(imageURL) {
       var meImage = new Image();
       meImage.src = imageURL;
       meImage.onload = function() {
         var w = meImage.width * 2;
         var h = meImage.height * 2;
 
-        var obj = createImage(meImage, canvas.width / 2 - w, canvas.height / 2 - h, w, h);
+        var obj = createImage(meImage, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
         obj.onclick = function() {
           if (!this.visible) return;
           this.visible = false;
@@ -216,17 +224,36 @@ $(function() {
       if (i) layer.add(i);
     }, 10);
 
-    return friends.forEach(function(friend) {
+    var duplicates = canvas.width / SZ * canvas.height / SZ / friends.length;
+    var shownFriends = []
+    friends.forEach(function(f) {
+      for (var i = 0; i < duplicates; i++) {
+        shownFriends.push(f);
+      }
+    });
+
+    return shownFriends.forEach(function(friend) {
       var imageURL = 'https://graph.facebook.com/' + friend.id + '/picture';
       var img = new Image();
       img.src = imageURL;
-      img.onload = function() {
+      
 
-        var obj = createImage(img, x, y, SZ, SZ);
+
+      img.onload = function() {
+        
+        var deg = Math.random()*2 - 1;
+        console.log(deg);
+        x = Math.floor(Math.random() * canvas.width + 1);
+        y = Math.floor(Math.random() * canvas.height + 1);
+        var obj = createImage(img, x, y, SZ, SZ, null, deg);
+      
         obj.friend = friend;
         obj.src = img.src;
 
+      
+
         function openImage() {
+
           obj.bringToTop();
 
           var centerX = obj.x + obj.width / 2;
@@ -257,18 +284,17 @@ $(function() {
         };
 
         obj.onclick = openImage;
-
         x += SZ;
-  
+
         if (x > canvas.width) {
           y += SZ;
           x = 0;
         }
 
         queue.push(obj);
-      }
+      };
     });
-  }
+  }  
 
   var refreshImage = new Image();
   refreshImage.src = 'img/refresh.png';
