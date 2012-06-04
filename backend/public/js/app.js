@@ -70,14 +70,14 @@ $(function() {
 
       navigator.accelerometer.watchAcceleration(function (acceleration) {
         var changes = {};
-        bound = 0.5;
+        bound = 0.2;
         
         alert("isShaken " + isShaken );
 
         if (previousReading.x !== null || isShaken == "true" ) {
-            changes.x = Math.abs(previousReading.x, acceleration.x);
-            changes.y = Math.abs(previousReading.y, acceleration.y);
-            changes.z = Math.abs(previousReading.z, acceleration.z);
+            changes.x = Math.abs(previousReading.x - acceleration.x);
+            changes.y = Math.abs(previousReading.y - acceleration.y);
+            changes.z = Math.abs(previousReading.z - acceleration.z);
 
             alert("changes " + changes.x +","+changes.y+","+changes.z );
 
@@ -91,9 +91,9 @@ $(function() {
         y: acceleration.y,
         z: acceleration.z
         }
+        alert("previousReading " + previousReading.x +","+previousReading.y+","+previousReading.z );
 
-
-        }, onError, { frequency: 750 });
+        }, onError, { frequency: 3000 });
   }
 
   function shaken(){
