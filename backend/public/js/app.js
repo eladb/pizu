@@ -93,6 +93,7 @@ $(function() {
   }
 
   function shaken(){
+      alert("shaken");
       isShaken = "true";
       navigator.notification.vibrate(2500);
       pair();
