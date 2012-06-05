@@ -185,8 +185,10 @@ $(function() {
         }).fail(function(jqxhr, textStatus, body) {
           $('#pair').removeClass('disabled');
           alert(body);
+          startWatch();
         });
       }, function (error) {
+        startWatch();
         switch(error.code) 
         {
           case error.TIMEOUT:
@@ -204,7 +206,9 @@ $(function() {
         }
       });
     }
-    startWatch();
+    else{
+      startWatch();
+    }
   }
 
   
