@@ -39,8 +39,8 @@ function createLayer() {
           break;
         }
         else {
-          if (x >= obj.x && x <= obj.x + obj.width &&
-              y >= obj.y && y <= obj.y + obj.height) {
+          if (x >= obj.xcoor && x <= obj.xcoor + obj.width() &&
+              y >= obj.ycoor && y <= obj.ycoor + obj.height()) {
             if (obj.onclick) {
               obj.onclick.call(obj, x, y);
               break;
@@ -56,27 +56,71 @@ var TO_RADIANS = Math.PI/180;
 
 function createImage(img, x, y, w, h, alpha, deg, fbid) {
   return {
-    img: img,
-    alpha: alpha || 1.0,
-    deg : deg || 0.0,
-    fbid : fbid || 0,
-    visible: true,
-    x: x,
-    y: y,
-    width: w,
-    height: h,
-    visible: true,
-    draw: function(ctx) {
-      if (!this.visible) return;
-      ctx.globalAlpha = this.alpha;
+    xlength: w,
+    ylength: h,
+    width: function() 
+    { 
+      var self = this;
+      return self.xlength; 
+    },
+    height: function() 
+    { 
+      var self = this;
+      //return self.xlength * self.xtoyratio;
+      return self.xlength; 
+    },
 
-      var centerX = (this.x + this.width / 2);
-      var centerY = (this.y + this.height / 2);
+
+    xcoor: x,
+    ycoor: y,
+    //xtoyratio: x / y,
+    fillStyle: 'white',
+    shadowBlur: 5.0,
+    shadowColor: 'black',
+    shadowOffsetX: 1.0,
+    shadowOffsetY: 1.0,
+    radius: 3,
+    deg: deg || 0.0,
+
+    x: function() 
+    { 
+      var self = this;
+      return self.xcoor; 
+    },
+
+    y: function() 
+    { 
+      var self = this;
+      return self.ycoor; 
+    },
+
+    rotate: function() 
+    { 
+      var self = this;
+      return self.deg; 
+    },
+
+    fbid: fbid || 0,
+    alpha: alpha || 1.0,
+
+
+
+    img: img,
+    
+    visible: true,
+    
+    draw: function(ctx) {
+      var self = this;
+      if (!self.visible) return;
+      ctx.globalAlpha = self.alpha;
+
+      var centerX = (self.xcoor + self.width() / 2);
+      var centerY = (self.ycoor + self.height() / 2);
       ctx.save();
       ctx.translate(centerX, centerY);
-      ctx.rotate(this.deg * TO_RADIANS);
+      ctx.rotate(self.deg * TO_RADIANS);
       ctx.translate(-centerX, -centerY);
-      ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+      ctx.drawImage(self.img, self.xcoor, this.ycoor, self.width(), self.height());
       ctx.restore();
     },
   };

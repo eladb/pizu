@@ -171,11 +171,19 @@ $(function() {
                 console.log('response:'+JSON.stringify(res));
                 var friends = res.data;
                 //showFriends(friends);
-                // Find shared friends and drop them
-                friends.forEach(function(friend) {
-                  Object.keys(layer._objects).forEach(function(key){
-                    if (friend.id == layer._objects[key].fbid) { layer._objects[key].ondrop(); };
-                  });  
+                // Find not-shared friends and drop them
+                Object.keys(layer._objects).forEach(function(key) {
+                  var found = false;
+                  friends.forEach(function(friend){
+                    if (friend.id == layer._objects[key].fbid) { 
+                      found = true; 
+                    };
+                  });
+                  if (!found) {
+                    if (layer._objects[key].ondrop != null) {
+                      layer._objects[key].ondrop();
+                    };
+                  };  
                 });
               });
             }
@@ -238,6 +246,10 @@ $(function() {
           pair();
         };
 
+        obj.ondrop = function() {
+          return;
+        };
+
         layer.add(obj);
       };
     });
@@ -265,8 +277,8 @@ $(function() {
         x = Math.floor(Math.random() * (canvas.width - 50) + 25);
         y = Math.floor(Math.random() * (canvas.height - 200) + 25);
 
-        // var obj = createImage(img, x, y, SZ, SZ, null, deg);
-        var obj = createPolaroid(img, x, y, SZ, friend.name, null, deg, friend.id);
+        var obj = createImage(img, x, y, SZ, SZ, null, deg, friend.id);
+        //var obj = createPolaroid(img, x, y, SZ, friend.name, null, deg, friend.id);
       
         obj.friend = friend;
         obj.src = img.src;
@@ -357,6 +369,7 @@ $(function() {
             if (obj.ycoor + obj.height() >= canvas.height) {
               clearInterval(iv);
               obj.visible = false;
+              layer.remove(obj);
             } 
           }, 30);
         };
@@ -385,6 +398,9 @@ $(function() {
     refreshButton.onclick = function() {
       window.location.reload();
     };
+    refreshButton.ondrop = function() {
+      return;
+    };
     layer.add(refreshButton);
   };
 
@@ -397,6 +413,9 @@ $(function() {
     pairButton.onclick = function() {
       console.log('pairing...');
       pair();
+    };
+    pairButton.ondrop = function() {
+      return;
     };
     layer.add(pairButton);
   };
