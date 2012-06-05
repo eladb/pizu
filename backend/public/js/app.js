@@ -104,7 +104,7 @@ $(function() {
 
   function shaken(){
       navigator.accelerometer.clearWatch(watchID);
-      alert("clearWatch " + watchID);
+      //alert("clearWatch " + watchID);
       navigator.notification.vibrate(2500);
       pair();
   }
