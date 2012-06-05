@@ -275,6 +275,7 @@ $(function() {
 
         function openImage() {
           obj.bringToTop();
+          var origDeg = obj.deg;
           obj.deg = 0;
 
           var centerX = obj.x() + obj.width() / 2;
@@ -291,6 +292,7 @@ $(function() {
               if (friends.bigImg.width() <= SZ) {
                 friends.bigImg.xlength = SZ;
                 //friends.bigImg.height = SZ;
+                obj.deg = origDeg;
                 clearInterval(iv);
                 friends.bigImg.onclick = openImage;
                 friends.bigImg.state = 'out';
@@ -314,6 +316,7 @@ $(function() {
 
             if (obj.width() <= SZ) {
               obj.xlength = SZ;
+              obj.deg = origDeg;
               //obj.height = SZ;
               clearInterval(iv);
               obj.onclick = openImage;            
