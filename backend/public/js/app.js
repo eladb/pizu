@@ -53,65 +53,55 @@ $(function() {
   }, false);
 
 
-    // The watch id references the current `watchAcceleration`
-    var watchID = null;
+  // The watch id references the current `watchAcceleration`
+  var watchID = null;
     
    // Start watching the acceleration
    function startWatch() {
       
-      if (!('accelerometer' in navigator)) {
-        console.log('no accelerometer')
-        return;
-      }
+    if (!('accelerometer' in navigator)) {
+      console.log('no accelerometer')
+      return;
+    }
 
-      var previousReading = {
-          x: null,
-          y: null,
-          z: null
-      }
+    var previousReading = {
+        x: null,
+        y: null,
+        z: null
+    }
 
-      alert("startWatch");
-      watchID = navigator.accelerometer.watchAcceleration(function (acceleration) {
-        var changes = {};
-        bound =10;
-        
-        //alert("isShaken " + isShaken );
+    alert("Ready To Bump ...");
+    watchID = navigator.accelerometer.watchAcceleration(function (acceleration) {
+      var changes = {};
+      bound =10;
+      
+      if (previousReading.x !== null) {
+        changes.x = Math.abs(previousReading.x - acceleration.x);
+        changes.y = Math.abs(previousReading.y - acceleration.y);
+        changes.z = Math.abs(previousReading.z - acceleration.z);
 
-        if (previousReading.x !== null) {
-            changes.x = Math.abs(previousReading.x - acceleration.x);
-            changes.y = Math.abs(previousReading.y - acceleration.y);
-            changes.z = Math.abs(previousReading.z - acceleration.z);
-
-            //alert("changes " + changes.x +","+changes.y+","+changes.z );
-            //alert("changes " + changes.x);
-
-            //if (changes.x > bound && changes.y > bound && changes.z > bound) {
-            if (changes.x > bound && changes.y > bound) {
-              //alert("changes " + changes.y);
-              shaken();
-            }
+        if (changes.x > bound && changes.y > bound) {
+          shaken();
         }
-        
-          previousReading = {
-          x: acceleration.x,
-          y: acceleration.y,
-          z: acceleration.z
-        
       }
         
-        }, onError, { frequency: 100 });
+      previousReading = {
+        x: acceleration.x,
+        y: acceleration.y,
+        z: acceleration.z
+      }        
+    }, onAccelerometerError, { frequency: 100 });
   }
 
   function shaken(){
-      navigator.accelerometer.clearWatch(watchID);
-      //alert("clearWatch " + watchID);
-      navigator.notification.vibrate(2500);
-      pair();
+    navigator.accelerometer.clearWatch(watchID);
+    navigator.notification.vibrate(2500);
+    pair();
   }
 
   // Error
-  function onError() {
-      alert('onError!');
+  function onAccelerometerError() {
+    alert("Acceleration Error occured");
   }
 
   var layer = createLayer();
@@ -142,7 +132,7 @@ $(function() {
 
         var url = '/?sid=' + geoHash + '&cid=' + cid;
 
-        $('#pair').addClass('disabled');
+        //$('#pair').addClass('disabled');
 
         console.log('sending post request', url);
 
@@ -153,7 +143,7 @@ $(function() {
         }).done(function(payload) {
           console.log('payload:' + payload);
 
-          $('#pair').removeClass('disabled');
+          //$('#pair').removeClass('disabled');
           
           for (var k in payload) {
             console.log('k=', k);
@@ -161,7 +151,7 @@ $(function() {
               var other = payload[k];
 
               console.log('found other payload:', payload[k]);
-              $('#other').html(other.name);
+              //$('#other').html(other.name);
 
               var fbid = other.fbid;
 
