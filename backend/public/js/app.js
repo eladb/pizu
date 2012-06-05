@@ -108,7 +108,7 @@ $(function() {
       alert("clearWatch " + watchID);
       navigator.notification.vibrate(2500);
       pair();
-      startWatch();
+      //startWatch();
   }
 
   // Error
@@ -179,6 +179,7 @@ $(function() {
                     if (friend.id == layer._objects[key].fbid) { layer._objects[key].ondrop(); };
                   });  
                 });
+                startWatch();
               });
             }
           }
@@ -187,6 +188,7 @@ $(function() {
           alert(body);
         });
       }, function (error) {
+        startWatch();
         switch(error.code) 
         {
           case error.TIMEOUT:
