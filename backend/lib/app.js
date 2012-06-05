@@ -32,7 +32,7 @@ server.post('/', function(req, res) {
 
   box.on('timeout', function() {
     delete boxes[boxid];
-    return res.send('No pair found', 404);
+    return res.send('Do Not Bump Alone ...', 404);
   });
 
   box.on('full', function(payloads) {

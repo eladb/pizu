@@ -12,7 +12,6 @@ $(function() {
   var name = null;
 
   function after_login() {
-    startWatch();
     FB.api('/me', function(response) {
       name = response.name;
       cid = response.id;
@@ -20,7 +19,7 @@ $(function() {
       FB.api('/me/friends', function(friendsData) {
         showFriends(friendsData.data);
       });
-      
+    startWatch();  
     });
   }
   var browser = 
@@ -74,7 +73,7 @@ $(function() {
       alert("startWatch");
       watchID = navigator.accelerometer.watchAcceleration(function (acceleration) {
         var changes = {};
-        bound =15;
+        bound =12;
         
         //alert("isShaken " + isShaken );
 
@@ -108,7 +107,6 @@ $(function() {
       alert("clearWatch " + watchID);
       navigator.notification.vibrate(2500);
       pair();
-      //startWatch();
   }
 
   // Error
