@@ -21,7 +21,7 @@ $(function() {
         loadFriendsImages(friendsData.data);
       });
 
-      startAnimation();
+      startBackroundInterval();
 
       //FB.api('/me/friends', function(friendsData) {
       //  showFriends(friendsData.data);
@@ -59,7 +59,7 @@ $(function() {
     });
   }, false);
 
-  function startAnimation() {
+  function startBackroundInterval() {
     backroundIntervalId = setInterval(function() {
         if(Object.keys(layer._objects).length < 40 ){
           var i = friendsImageQueue.shift();
@@ -184,7 +184,7 @@ $(function() {
                 //clear layer
                 Object.keys(layer._objects).forEach(function(key) {
                   if (layer._objects[key].speed > 0) {
-                    layer.remove(_objects[key]);
+                    layer.remove(layer._objects[key]);
                   };
                 });
 
@@ -206,7 +206,7 @@ $(function() {
                 };
                 
                 friendsImageQueue = sharedFriends;
-                startAnimation();
+                startBackroundInterval();
 
 
                 // Find not-shared friends and drop them
