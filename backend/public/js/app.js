@@ -61,7 +61,7 @@ $(function() {
 
   function startAnimation() {
     backroundIntervalId = setInterval(function() {
-        if(Object.keys(layer._objects).length < 20 ){
+        if(Object.keys(layer._objects).length < 30 ){
           var i = friendsImageQueue.shift();
           if (i) {
             layer.add(i);
