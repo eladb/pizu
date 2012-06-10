@@ -315,7 +315,7 @@ $(function() {
 
 
 
-        var obj = createImage(img, x, y, SZ, SZ, null, deg, friend.id,drift,speed);
+        var obj = createImage(img, x, y, img.width, img.height, null, deg, friend.id,drift,speed);
         //var obj = createPolaroid(img, x, y, SZ, friend.name, null, deg, friend.id);
       
         obj.friend = friend;
