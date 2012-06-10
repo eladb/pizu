@@ -10,6 +10,7 @@ $(function() {
 
   var cid = null;
   var name = null;
+  var backroundIntervalId = null;
 
   function after_login() {
     FB.api('/me', function(response) {
@@ -17,8 +18,14 @@ $(function() {
       cid = response.id;
 
       FB.api('/me/friends', function(friendsData) {
-        showFriends(friendsData.data);
+        loadFriendsImages(friendsData.data);
       });
+
+      startAnimation();
+
+      //FB.api('/me/friends', function(friendsData) {
+      //  showFriends(friendsData.data);
+      //});
     startWatch();  
     });
   }
@@ -52,6 +59,17 @@ $(function() {
     });
   }, false);
 
+  function startAnimation() {
+    backroundIntervalId = setInterval(function() {
+        if(Object.keys(layer._objects).length < 20 ){
+          var i = friendsImageQueue.shift();
+          if (i) {
+            layer.add(i);
+            friendsImageQueue.push(i);
+          }
+        }
+      }, 30);
+  }
 
   // The watch id references the current `watchAcceleration`
   var watchID = null;
@@ -161,25 +179,55 @@ $(function() {
                 console.log('response:'+JSON.stringify(res));
                 var friends = res.data;
                 //showFriends(friends);
-                // Find not-shared friends and drop them
+                //stop backround animation
+                clearInterval(backroundIntervalId);
+                //clear layer
                 Object.keys(layer._objects).forEach(function(key) {
+                  if (layer._objects[key].speed > 0) {
+                    layer.remove(_objects[key]);
+                  };
+                });
+
+                var sharedFriends = [];
+                var friendsLength = friendsImageQueue.length;
+                // Find not-shared friends and drop them
+                while (friendsImageQueue.length == 0)
+                {
+                  var img = friendsImageQueue.pop();
                   var found = false;
                   friends.forEach(function(friend){
-                    if (friend.id == layer._objects[key].fbid) { 
+                    if (friend.id == img.fbid) { 
                       found = true; 
                     };
                   });
-                  if (!found) {
-                    if (layer._objects[key].ondrop != null) {
-                      layer._objects[key].ondrop();
-                    };
-                  };  
-                });
+                  if (found) {
+                    sharedFriends.push();
+                  }; 
+                };
+                
+                friendsImageQueue = sharedFriends;
+                startAnimation();
+
+
+                // Find not-shared friends and drop them
+                //Object.keys(layer._objects).forEach(function(key) {
+                //  var found = false;
+                //  friends.forEach(function(friend){
+                //    if (friend.id == layer._objects[key].fbid) { 
+                //      found = true; 
+                //    };
+                //  });
+                //  if (!found) {
+                //    if (layer._objects[key].ondrop != null) {
+                //      layer._objects[key].ondrop();
+                //    };
+                //  };  
+                //});
               });
             }
           }
         }).fail(function(jqxhr, textStatus, body) {
-          $('#pair').removeClass('disabled');
+          //$('#pair').removeClass('disabled');
           alert(body);
           startWatch();
         });
@@ -243,6 +291,59 @@ $(function() {
         layer.add(obj);
       };
     });
+  }
+
+
+  var friendsImageQueue = [];
+
+  function loadFriendsImages(friends){
+    var x = 50;
+    var y = 0;
+    var SZ = 50;
+
+    return friends.forEach(function(friend) {
+      var imageURL = 'https://graph.facebook.com/' + friend.id + '/picture';
+      var img = new Image();
+      img.src = imageURL;
+      
+      img.onload = function() {
+        
+        var deg = Math.random()*360 - 180;
+        x = Math.round(Math.random() * canvas.width);
+        y = -60;
+        var drift = Math.random();
+        var speed = Math.round(Math.random() * 5) + 1;
+
+
+
+        var obj = createImage(img, x, y, SZ, SZ, null, deg, friend.id,drift,speed);
+        //var obj = createPolaroid(img, x, y, SZ, friend.name, null, deg, friend.id);
+      
+        obj.friend = friend;
+        obj.src = img.src;
+        obj.state = 'out';
+        friends.bigImg = null;      
+        var context = canvas.getContext('2d'); 
+
+        function openImage() {
+          return;
+        };
+        
+        function shakeImage() {
+          return;
+        };
+
+        function dropImage() {
+          return;
+        };
+
+        obj.onclick = openImage;        
+        obj.ondrop = shakeImage;
+
+        friendsImageQueue.unshift(obj);
+      };
+    });
+
   }
 
   function showFriends(friends) {

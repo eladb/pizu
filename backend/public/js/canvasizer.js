@@ -19,6 +19,7 @@ function createLayer() {
       var self = this;
       Object.keys(self._objects).forEach(function(key) {
         var obj = self._objects[key];
+        obj.update(self, ctx);
         ctx.save();
         obj.draw.call(obj, ctx);
         ctx.restore();
@@ -54,7 +55,7 @@ function createLayer() {
 
 var TO_RADIANS = Math.PI/180; 
 
-function createImage(img, x, y, w, h, alpha, deg, fbid) {
+function createImage(img, x, y, w, h, alpha, deg, fbid, drift, speed) {
   return {
     xlength: w,
     ylength: h,
@@ -81,6 +82,8 @@ function createImage(img, x, y, w, h, alpha, deg, fbid) {
     shadowOffsetY: 1.0,
     radius: 3,
     deg: deg || 0.0,
+    drift:drift || 0.0,
+    speed:speed || 0.0,
 
     x: function() 
     { 
@@ -122,6 +125,21 @@ function createImage(img, x, y, w, h, alpha, deg, fbid) {
       ctx.translate(-centerX, -centerY);
       ctx.drawImage(self.img, self.xcoor, this.ycoor, self.width(), self.height());
       ctx.restore();
+    },
+
+    update: function(layer, ctx){
+      var self = this;
+      if(self.ycoor < ctx.canvas.height - 50){
+        self.ycoor += self.speed;
+        self.xcoor += self.drift;
+        if (self.xcoor > ctx.canvas.width){
+          self.xcoor = 0;
+        }
+      }
+      else{
+        layer.remove(self);
+        self.ycoor = -60;
+      }
     },
   };
 }
