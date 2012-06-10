@@ -191,7 +191,7 @@ $(function() {
                 var sharedFriends = [];
                 var friendsLength = friendsImageQueue.length;
                 // Find not-shared friends and drop them
-                while (friendsImageQueue.length == 0)
+                while (friendsImageQueue.length != 0)
                 {
                   var img = friendsImageQueue.pop();
                   var found = false;
@@ -201,7 +201,7 @@ $(function() {
                     };
                   });
                   if (found) {
-                    sharedFriends.push();
+                    sharedFriends.push(img);
                   }; 
                 };
                 
