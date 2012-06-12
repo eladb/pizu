@@ -19,7 +19,7 @@ $(function() {
       cid = response.id;
 
       FB.api('/me/friends', function(friendsData) {
-        loadFriendsImages(friendsData.data,20);
+        loadFriendsImages(friendsData.data,30);
       });
     });
   }
@@ -239,7 +239,7 @@ function loadFriendsImages(friends,minLoadingFriendNumber){
         afterLoadMinimalFriends();
       }
 
-      if(index < 20)
+      if(index < 30)
       {
         var firstName=friend.name.split(" ")[0];
         //var line = "<li><a href=\"" + imageURL + "\" title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
