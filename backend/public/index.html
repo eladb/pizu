@@ -144,6 +144,20 @@
       margin-left: -60px;
       font-size: small;
     }
+    
+    #searching{
+      text-align: center;
+      vertical-align: middle;
+      font-family: Verdana;
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -60px;
+      font-size: small;
+      z-index: 25;
+      visibility: hidden;
+    }
 
   </style>
 </head>
@@ -152,6 +166,10 @@
     <div id="dvProgress"> 
         <!--<img src="img/searching.gif" style="vertical-align: middle" alt="Processing" />-->
         loading application ...
+    </div>
+    <div id="searching"> 
+        <img src="img/searching.gif" style="vertical-align: middle" alt="Searching" />
+        Searching ...
     </div>
     <div id="shake">
         <img id="shakeIphone" src="img\shakeIphone.jpg" onclick="pair()">

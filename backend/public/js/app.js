@@ -82,7 +82,7 @@ var watchID = null;
   
 // Start watching the acceleration
 function startWatch() {
-  $('#dvProgress').css("visibility","hidden")
+  $('#dvProgress').css("visibility","hidden");
   console.log('visible');
   $('div#shake').css("visibility","visible");
   shakeAnimation();
@@ -134,6 +134,10 @@ function onAccelerometerError() {
 
 function pair() {
   console.log("Pair");
+  
+  $('#shake').css("visibility","hidden");
+  $('#searching').css("visibility","visible");
+  
   if (!cid || !name) {
     console.error('still not logged in');
     return;
@@ -162,6 +166,8 @@ function pair() {
       }).done(function(payload) {
         console.log('payload:' + payload);
         
+        $('#searching').css("visibility","hidden");
+
         for (var k in payload) {
           console.log('k=', k);
           if (k != cid) {
@@ -201,9 +207,11 @@ function pair() {
         }
       }).fail(function(jqxhr, textStatus, body) {
         alert(body);
+        $('#searching').css("visibility","hidden");
         startWatch();
       });
     }, function (error) {
+      $('#searching').css("visibility","hidden");
       startWatch();
       switch(error.code) 
       {
@@ -223,6 +231,7 @@ function pair() {
     });
   }
   else{
+    $('#searching').css("visibility","hidden");
     startWatch();
   }
 }
