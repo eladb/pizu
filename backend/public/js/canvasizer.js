@@ -161,8 +161,8 @@ function canvasize(canvas, obj) {
   $(window).resize(adjustSize);
   adjustSize();
 
-  setInterval(redraw, 30);
-
+  //setInterval(redraw, 30);
+  
   canvas.onclick = function(e) {
     var x = Math.floor((e.pageX - $("canvas").offset().left));
     var y = Math.floor((e.pageY - $("canvas").offset().top));

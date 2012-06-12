@@ -11,6 +11,9 @@ $(function() {
   var cid = null;
   var name = null;
   var backroundIntervalId = null;
+  var friendsImageArray = new Array();
+
+  var index = 0;
 
   function after_login() {
     FB.api('/me', function(response) {
@@ -21,7 +24,27 @@ $(function() {
         loadFriendsImages(friendsData.data);
       });
 
-      startBackroundInterval(friendsImageQueue);
+
+      //startBackroundInterval(friendsImageQueue);
+      //setInterval(function(){
+      //    //update div images
+      //    if(friendsImageArray.length > 8)
+      //    {
+      //      for (var i = 1; i <= 9; i++) {
+      //        arrayPosition = index-1+i;
+      //        if(arrayPosition >= friendsImageArray.length){
+      //          arrayPosition -= friendsImageArray.length
+      //        }
+      //        
+      //        $("#level" + i +" img").remove();
+      //        $("#level" + i).prepend(friendsImageArray[arrayPosition].img);
+      //      };
+      //      index++;
+      //      if(index == friendsImageArray.length){
+      //        index = 0;
+      //      }
+      //    }
+      //  }, 100);
 
       //FB.api('/me/friends', function(friendsData) {
       //  showFriends(friendsData.data);
@@ -77,6 +100,8 @@ $(function() {
    // Start watching the acceleration
    function startWatch() {
       
+    $('div#shake').css("visibility","visible");
+    
     if (!('accelerometer' in navigator)) {
       console.log('no accelerometer')
       return;
@@ -88,7 +113,7 @@ $(function() {
         z: null
     }
 
-    alert("Ready To Bump ...");
+    
     watchID = navigator.accelerometer.watchAcceleration(function (acceleration) {
       var changes = {};
       bound =10;
@@ -112,6 +137,7 @@ $(function() {
   }
 
   function shaken(){
+    $('div#shake').css("visibility","hidden");
     navigator.accelerometer.clearWatch(watchID);
     navigator.notification.vibrate(2500);
     pair();
@@ -304,7 +330,7 @@ $(function() {
       var imageURL = 'https://graph.facebook.com/' + friend.id + '/picture';
       var img = new Image();
       img.src = imageURL;
-      
+
       img.onload = function() {
         
         var deg = Math.random()*360 - 180;
@@ -317,7 +343,11 @@ $(function() {
 
         var obj = createImage(img, x, y, img.width, img.height, null, deg, friend.id,drift,speed);
         //var obj = createPolaroid(img, x, y, SZ, friend.name, null, deg, friend.id);
-      
+
+        var firstName=friend.name.split(" ")[0];
+        var line = "<li><a href=\"" + imageURL + "\" title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
+        $('ul').append(line);
+              
         obj.friend = friend;
         obj.src = img.src;
         obj.state = 'out';
@@ -340,6 +370,7 @@ $(function() {
         obj.ondrop = shakeImage;
 
         friendsImageQueue.unshift(obj);
+        friendsImageArray.push(obj);
       };
     });
 
