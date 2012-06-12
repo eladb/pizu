@@ -94,6 +94,18 @@ $(function() {
       }, 30);
   }
 
+  function shakeAnimation() {
+    $('div#shake img').removeClass("shake");
+    console.log("shake it shake it baby ...");
+    $('div#shake img').addClass("shake");
+    //$('div#shake img').transition({ rotate: '30deg' },{queue:true,duration:'slow',easing:"easein"});
+    //$('div#shake img').transition({ rotate: '-30deg' },{queue:true,duration:'slow',easing:"easein"});
+    //$('div#shake img').transition({ rotate: '30deg' },{queue:true,duration:'slow',easing:"easein"});
+    //$('div#shake img').transition({ rotate: '-30deg' },{queue:true,duration:'slow',easing:"easein"});
+    //$('div#shake img').animate({rotate: '100'},{duration : 1000});
+    //$('div#shake img').css("-webkit-animation", "shake 0.7s ease-in-out 0s 4 alternate");
+
+  }
   // The watch id references the current `watchAcceleration`
   var watchID = null;
     
@@ -101,7 +113,10 @@ $(function() {
    function startWatch() {
       
     $('div#shake').css("visibility","visible");
-    
+    shakeAnimation();
+    //pausecomp(10000);
+    //shakeAnimation();
+
     if (!('accelerometer' in navigator)) {
       console.log('no accelerometer')
       return;

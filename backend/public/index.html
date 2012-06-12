@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src='js/jquery-transit.js'></script>
   <script src="js/facebook_js_sdk.js"></script>
   <script src='js/cordova-1.7.0.js' type='text/javascript'></script>
   <script src='js/cdv-plugin-fb-connect.js' type='text/javascript'></script>
@@ -238,7 +239,7 @@
       border-style:solid;
       border-width:5px;
       border-color:black;
-      -webkit-animation: shake 0.7s ease-in-out 0s 4 alternate;
+      /*-webkit-animation: shake 0.7s ease-in-out 0s 4 alternate;*/
     }
 
     div#shake span{
@@ -257,6 +258,10 @@
     @-webkit-keyframes shake {
        0% { -webkit-transform: rotate(-10deg); }
        100% { -webkit-transform: rotate(10deg); }
+    }
+
+    .shake{
+      -webkit-animation: shake 0.7s ease-in-out 0s 4 alternate;
     }
 
 
