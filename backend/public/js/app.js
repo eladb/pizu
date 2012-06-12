@@ -252,6 +252,7 @@ function loadFriendsImages(friends,minLoadingFriendNumber){
 }
 
 function afterLoadMinimalFriends() {
+  $('ul.polaroids').css("visibility","visible");
   startWatch();  
 }
 
