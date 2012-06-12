@@ -19,10 +19,8 @@ $(function() {
       cid = response.id;
 
       FB.api('/me/friends', function(friendsData) {
-        loadFriendsImages(friendsData.data);
+        loadFriendsImages(friendsData.data,20);
       });
-
-    startWatch();  
     });
   }
 
@@ -229,7 +227,7 @@ function pair() {
   }
 }
 
-function loadFriendsImages(friends){
+function loadFriendsImages(friends,minLoadingFriendNumber){
   return friends.forEach(function(friend) {
     var imageURL = 'https://graph.facebook.com/' + friend.id + '/picture';
     var img = new Image();
@@ -237,6 +235,10 @@ function loadFriendsImages(friends){
 
     index = 0;
     img.onload = function() {
+      if(index == minLoadingFriendNumber){
+        afterLoadMinimalFriends();
+      }
+
       if(index < 20)
       {
         var firstName=friend.name.split(" ")[0];
@@ -247,6 +249,10 @@ function loadFriendsImages(friends){
       index++;
     };
   });
+}
+
+function afterLoadMinimalFriends() {
+  startWatch();  
 }
 
 
