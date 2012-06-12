@@ -13,7 +13,7 @@
     
     <style>
     body {
-     background: black; 
+     background: #2F2C2C; 
     }
     
     ul.polaroids {
@@ -135,6 +135,12 @@
 </head>
 <div id="fb-root"></div>
 <body>
+    <div style="text-align: center; vertical-align: middle; font-family: Verdana; color: Blue;
+        position: absolute; top: 50%; left: 50%; margin-left: -88px; font-size: small;"
+        id="dvProgress" runat="server">
+        Please Wait ...
+        <img src="img/searching.gif" style="vertical-align: middle" alt="Processing" />
+    </div>
     <div id="shake">
         <img id="shakeIphone" src="img\shakeIphone.jpg" onclick="pair()">
         <span>Shake It...</span>
