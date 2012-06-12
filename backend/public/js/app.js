@@ -56,9 +56,25 @@ $(function() {
   }, false);
 
   function shakeAnimation() {
-    $('div#shake img').removeClass("shake");
     console.log("shake it shake it baby ...");
-    $('div#shake img').addClass("shake");
+    var img = document.getElementById('shakeIphone');
+    img.className = 'shake';
+    img.addEventListener('webkitAnimationEnd', function(){
+      this.className = '';
+    });
+
+    //$('div#shake img').removeClass("");
+    //console.log($('div#shake img'));
+    
+    //$('div#shake img').addClass("shake");
+    //console.log($('div#shake img'));
+
+    //$('div#shake img').transition({ rotate: '30deg' },{queue:true,duration:'slow',easing:"easein"});
+    //$('div#shake img').transition({ rotate: '-30deg' },{queue:true,duration:'slow',easing:"easein"});
+    //$('div#shake img').transition({ rotate: '30deg' },{queue:true,duration:'slow',easing:"easein"});
+    //$('div#shake img').transition({ rotate: '-30deg' },{queue:true,duration:'slow',easing:"easein"});
+    //$('div#shake img').animate({rotate: '100'},{duration : 1000});
+    //$('div#shake img').css("-webkit-animation", "shake 0.7s ease-in-out 0s 4 alternate");
   }
 
   // The watch id references the current `watchAcceleration`
@@ -66,13 +82,10 @@ $(function() {
     
   // Start watching the acceleration
   function startWatch() {
-      
-    $('div#shake').css("visibility","visible");
-    shakeAnimation();
     
     if (!('accelerometer' in navigator)) {
-        console.log('no accelerometer')
-        return;
+      console.log('no accelerometer');
+      return;
     }
 
     var previousReading = {
@@ -81,6 +94,10 @@ $(function() {
         z: null
     }
 
+    console.log('visible');
+    $('div#shake').css("visibility","visible");
+    shakeAnimation();
+    
     watchID = navigator.accelerometer.watchAcceleration(function (acceleration) {
       var changes = {};
       bound =10;
@@ -217,7 +234,8 @@ $(function() {
 
         img.onload = function() {
         var firstName=friend.name.split(" ")[0];
-        var line = "<li><a href=\"" + imageURL + "\" title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
+        //var line = "<li><a href=\"" + imageURL + "\" title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
+        var line = "<li><a href=\"#\" title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
         $('ul').append(line);
     };
   });
