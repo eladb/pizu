@@ -131,15 +131,26 @@
     .shake{
       -webkit-animation: shake 0.7s ease-in-out 0s 4 alternate;
     }
+
+    #dvProgress{
+      text-align: center;
+      vertical-align: middle;
+      font-family: Verdana;
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -88px;
+      font-size: small;
+    }
+    
   </style>
 </head>
 <div id="fb-root"></div>
 <body>
-    <div style="text-align: center; vertical-align: middle; font-family: Verdana; color: Blue;
-        position: absolute; top: 50%; left: 50%; margin-left: -88px; font-size: small;"
-        id="dvProgress" runat="server">
-        Please Wait ...
+    <div id="dvProgress"> 
         <img src="img/searching.gif" style="vertical-align: middle" alt="Processing" />
+        load application ...
     </div>
     <div id="shake">
         <img id="shakeIphone" src="img\shakeIphone.jpg" onclick="pair()">

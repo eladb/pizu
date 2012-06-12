@@ -82,7 +82,7 @@ var watchID = null;
   
 // Start watching the acceleration
 function startWatch() {
-  
+  $('#dvProgress').css("visibility","hidden")
   console.log('visible');
   $('div#shake').css("visibility","visible");
   shakeAnimation();
