@@ -1,7 +1,17 @@
+///<reference path="facebook_js_sdk.js" />
+///<reference path="jquery-1.7.2.min.js" />
+///<reference path="cordova-1.7.0.js" />
+///<reference path="cdv-plugin-fb-connect.js" />
+///<reference path="geohash.js" />
+///<reference path="canvasizer.js" />
+///<reference path="app.js" />
+
+
 function createLayer() {
   return {
     _objects: { },
     _next: 0,
+    needsClearing: true,
     add: function(obj) {
       var self = this;
       obj._id = self._next;
@@ -13,41 +23,50 @@ function createLayer() {
         self.remove(obj);
       };
       self._next = self._next + 1;
+      obj.needsRefresh = true;
       self._objects[obj._id] = obj;
     },
     draw: function(ctx) {
       var self = this;
       Object.keys(self._objects).forEach(function(key) {
         var obj = self._objects[key];
-        ctx.save();
-        obj.draw.call(obj, ctx);
-        ctx.restore();
+        if (self.needsClearing || obj.needsRefresh){
+          ctx.save();
+          obj.draw(ctx);
+          ctx.restore();
+        };
       });
+      self.needsClearing = false;
     },
     remove: function(obj) {
       var self = this;
       delete self._objects[obj._id];
+      self.needsClearing = true;
       return obj;
     },
     onclick: function(x, y) {
+      var found = false;
       var self = this;
       var keys = Object.keys(self._objects);
       for (var i = keys.length - 1; i >= 0; i--) {
         var obj = self._objects[keys[i]];
         if (obj.hittest && obj.hittest(x, y)) {
           obj.onclick.call(obj, x, y);
+          found = true;
           break;
         }
         else {
           if (x >= obj.xcoor && x <= obj.xcoor + obj.width() &&
               y >= obj.ycoor && y <= obj.ycoor + obj.height()) {
             if (obj.onclick) {
-              obj.onclick.call(obj, x, y);
+              obj.onclick(x, y);
+              found = true;
               break;
             }
           }
         }
       }
+      return found;
     },
   };
 }
@@ -69,7 +88,7 @@ function createImage(img, x, y, w, h, alpha, deg, fbid) {
       //return self.xlength * self.xtoyratio;
       return self.xlength; 
     },
-
+    needsRefresh: true,
 
     xcoor: x,
     ycoor: y,
@@ -112,45 +131,106 @@ function createImage(img, x, y, w, h, alpha, deg, fbid) {
     draw: function(ctx) {
       var self = this;
       if (!self.visible) return;
-      ctx.globalAlpha = self.alpha;
+      if (!self.needsRefresh) 
+        alert('Baaa trying to draw a view which doesnt need refresh');
 
       var centerX = (self.xcoor + self.width() / 2);
       var centerY = (self.ycoor + self.height() / 2);
+      
       ctx.save();
+      ctx.globalAlpha = self.alpha;
       ctx.translate(centerX, centerY);
       ctx.rotate(self.deg * TO_RADIANS);
       ctx.translate(-centerX, -centerY);
       ctx.drawImage(self.img, self.xcoor, this.ycoor, self.width(), self.height());
       ctx.restore();
+
+      self.needsRefresh = false;
     },
   };
 }
 
-function canvasize(canvas, obj) {
-  var ctx = canvas.getContext("2d");
+function canvasize(fgCanvas, bgCanvas, fgBufferCanvas, bgBufferCanvas, fgObj, bgObj) {
+  var fgCtx = fgCanvas.getContext("2d");
+  var bgCtx = bgCanvas.getContext("2d");
+  var fgBufferCtx = fgBufferCanvas.getContext("2d");  
+  var bgBufferCtx = bgBufferCanvas.getContext("2d");  
+  var frameCounter = 0;
 
   function redraw() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    obj.draw.call(obj, ctx);
+    function DrawLayerOnCanvas(bufferCtx, ctx, obj, isBackground)
+    {
+        // Clear the buffer if needed
+        if (obj.needsClearing) 
+          {
+            if (isBackground) {
+                bufferCtx.fillRect(0, 0, bufferCtx.canvas.width, bufferCtx.canvas.height);    
+            }
+            else{
+                bufferCtx.clearRect(0, 0, bufferCtx.canvas.width, bufferCtx.canvas.height);
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);        
+            }
+          };
+        obj.draw(bufferCtx);
+    
+        // copy the entire rendered image from the buffer canvas to the visible one
+        ctx.save();
+	    ctx.drawImage(bufferCtx.canvas, 0, 0, bufferCtx.canvas.width, bufferCtx.canvas.height);
+        ctx.restore();   
+    }
+
+    // First, draw BG if needed
+    DrawLayerOnCanvas(bgBufferCtx, bgCtx, bgObj, true);
+
+    // Now, draw FG
+    DrawLayerOnCanvas(fgBufferCtx, fgCtx, fgObj, false);
   }
 
   function adjustSize() {
-    canvas.width = $(window).width();
-    canvas.height = $(window).height();
+    fgCanvas.width = $(window).width();
+    fgCanvas.height = $(window).height();
+    bgCanvas.width = fgCanvas.width;
+    bgCanvas.height = fgCanvas.height;
+    fgBufferCanvas.width = fgCanvas.width;
+    fgBufferCanvas.height = fgCanvas.height;
+    bgBufferCanvas.width = bgCanvas.width;
+    bgBufferCanvas.height = bgCanvas.height;
   }
 
   $(window).resize(adjustSize);
   adjustSize();
 
+  //redraw();
+
+
+  bgBufferCtx.fillStyle = "black";
+  //bgBufferCtx.fillRect(0, 0, bgBufferCtx.canvas.width, bgBufferCtx.canvas.height);    
   setInterval(redraw, 30);
 
-  canvas.onclick = function(e) {
+  bgCanvas.onclick = function(e) {
     var x = Math.floor((e.pageX - $("canvas").offset().left));
     var y = Math.floor((e.pageY - $("canvas").offset().top));
-    if (obj.onclick) {
-      obj.onclick.call(obj, x, y);
+    if (bgObj.onclick) {
+      bgObj.onclick(x, y);
     }
+  };
+
+  fgCanvas.onclick = function(e) {
+    
+    var foundFgObject = false;
+
+    var x = Math.floor((e.pageX - $("canvas").offset().left));
+    var y = Math.floor((e.pageY - $("canvas").offset().top));
+    if (fgObj.onclick) {
+      foundFgObject = fgObj.onclick(x, y);
+    }
+
+    if (!foundFgObject){
+        //Pass click to BG if didn't find a FG object
+        bgCanvas.onclick(e);
+    }
+
+    
   };
 }
 
@@ -165,6 +245,7 @@ function createView(view) {
   view.visible = true;
   view._children = {};
   view._nextid = 0;
+  view.needsRefresh = true;
 
   view.add = function(child) {
     if (!child._isView) throw new Error('can only add views as children to a view');
@@ -205,6 +286,15 @@ function createView(view) {
     }
 
     if (self.visible) {
+      if (!self.needsRefresh) 
+        alert('Baaa trying to draw an image which doesnt need refresh');
+      
+      if(self.needsRefresh){
+          Object.keys(self._children).forEach(function(key) {
+            var child = self._children[key];
+            child.needsRefresh = true;
+          });
+      }
       ctx.translate(self.x(), self.y());
 
       ctx.save();
@@ -231,6 +321,7 @@ function createView(view) {
       });
 
       ctx.restore();
+      self.needsRefresh = false;
     }
   };
 

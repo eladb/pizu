@@ -1,3 +1,11 @@
+///<reference path="facebook_js_sdk.js" />
+///<reference path="jquery-1.7.2.min.js" />
+///<reference path="cordova-1.7.0.js" />
+///<reference path="cdv-plugin-fb-connect.js" />
+///<reference path="geohash.js" />
+///<reference path="canvasizer.js" />
+///<reference path="app.js" />
+
 var APP_ID = '146577522141106';
 
 // TODO: remove, used only for dev.
@@ -114,8 +122,22 @@ $(function() {
       alert('onError!');
   }
 
-  var layer = createLayer();
-  var canvas = $('canvas')[0];
+  var fgLayer = createLayer();
+  var bgLayer = createLayer();
+
+  var fgCanvas = document.getElementById("fgCanvas");
+  var bgCanvas = document.getElementById("bgCanvas");
+  bgCanvas.x = fgCanvas.x;
+  bgCanvas.y = fgCanvas.y;
+  var fgBufferCanvas = document.createElement("canvas");
+  var bgBufferCanvas = document.createElement("canvas");
+  bgCanvas.width = fgCanvas.width;
+  bgCanvas.height = fgCanvas.height;
+  fgBufferCanvas.width = fgCanvas.width;
+  fgBufferCanvas.height = fgCanvas.height;
+  bgBufferCanvas.width = bgCanvas.width;
+  bgBufferCanvas.height = bgCanvas.height;
+  
 
   function pair() {
     if (!cid || !name) {
@@ -172,16 +194,16 @@ $(function() {
                 var friends = res.data;
                 //showFriends(friends);
                 // Find not-shared friends and drop them
-                Object.keys(layer._objects).forEach(function(key) {
+                Object.keys(bgLayer._objects).forEach(function(key) {
                   var found = false;
                   friends.forEach(function(friend){
-                    if (friend.id == layer._objects[key].fbid) { 
+                    if (friend.id == bgLayer._objects[key].fbid) { 
                       found = true; 
                     };
                   });
                   if (!found) {
-                    if (layer._objects[key].ondrop != null) {
-                      layer._objects[key].ondrop();
+                    if (bgLayer._objects[key].ondrop != null) {
+                      bgLayer._objects[key].ondrop();
                     };
                   };  
                 });
@@ -218,7 +240,7 @@ $(function() {
   }
 
   
-  canvasize(canvas, layer);
+  canvasize(fgCanvas, bgCanvas, fgBufferCanvas, bgBufferCanvas, fgLayer, bgLayer);
 
   function showMyImage() {
     var meid = development ? development.me.id : 'me';
@@ -250,7 +272,7 @@ $(function() {
           return;
         };
 
-        layer.add(obj);
+        bgLayer.add(obj);
       };
     });
   }
@@ -263,10 +285,18 @@ $(function() {
 
     setInterval(function() {
       var i = queue.shift();
-      if (i) layer.add(i);
+      if (i) bgLayer.add(i);
     }, 10);
 
+    var counter = 0;
+
     return friends.forEach(function(friend) {
+      counter++;
+      // Only display first 100 friends for performance
+      if (counter > 300) {
+            return;
+      }
+
       var imageURL = 'https://graph.facebook.com/' + friend.id + '/picture';
       var img = new Image();
       img.src = imageURL;
@@ -274,44 +304,67 @@ $(function() {
       img.onload = function() {
         
         var deg = Math.random()*360 - 180;
-        x = Math.floor(Math.random() * (canvas.width - 50) + 25);
-        y = Math.floor(Math.random() * (canvas.height - 200) + 25);
+        x = Math.floor(Math.random() * (fgCanvas.width - 50) + 25);
+        y = Math.floor(Math.random() * (fgCanvas.height - 200) + 25);
 
-        var obj = createImage(img, x, y, SZ, SZ, null, deg, friend.id);
-        //var obj = createPolaroid(img, x, y, SZ, friend.name, null, deg, friend.id);
+        //var obj = createImage(img, x, y, SZ, SZ, null, deg, friend.id);
+        var obj = createPolaroid(img, x, y, SZ, friend.name, null, deg, friend.id);
       
         obj.friend = friend;
         obj.src = img.src;
         obj.state = 'out';
         friends.bigImg = null;      
-        var context = canvas.getContext('2d'); 
+        //var context = canvas.getContext('2d'); 
 
         function openImage() {
-          obj.bringToTop();
-          var origDeg = obj.deg;
-          obj.deg = 0;
+          //obj.bringToTop();
+          //var origDeg = obj.deg;
+          
+          if(friends.bigImg != obj){
+              var friend = obj.friend;
+              var st = obj.state;
+              obj = createPolaroid(obj.image, obj.xcoor, obj.ycoor, obj.width(), obj.label, null, 0, obj.friend.id);
+              obj.friend = friend;
+              obj.state = st;
+              obj.needsRefresh = true;
+              obj.onclick = function () {
+                    return;
+                };
+              //obj.deg = 0;
+              fgLayer.add(obj);
+          }
 
           var centerX = obj.x() + obj.width() / 2;
           var centerY = obj.y() + obj.height() / 2;          
           
           var v = 10;
+          // Add the image to the fg layer to animate
+          
 
           var iv = setInterval(function() {
+            fgLayer.remove(obj);
+            fgLayer.add(obj);
+
             var m = obj.state === 'out' ? 1 : -1;
             if (friends.bigImg && friends.bigImg != obj) {
-              friends.bigImg.onclick = null;
+              fgLayer.remove(friends.bigImg);
+              fgLayer.add(friends.bigImg);
+              friends.bigImg.onclick = function () {
+                    return;
+                };
               friends.bigImg.xlength -= v;
               //friends.bigImg.height -= v;
               if (friends.bigImg.width() <= SZ) {
-                friends.bigImg.xlength = SZ;
+                //friends.bigImg.xlength = SZ;
                 //friends.bigImg.height = SZ;
-                obj.deg = origDeg;
-                clearInterval(iv);
-                friends.bigImg.onclick = openImage;
-                friends.bigImg.state = 'out';
+                //clearInterval(iv);
+                //friends.bigImg.onclick = openImage;
+                //friends.bigImg.state = 'out';
+                fgLayer.remove(friends.bigImg);
+                friends.bigImg = null;
               }
             }
-
+           
             obj.xlength += v * m;
             //obj.height += v * m;
             //obj.onclick = null;
@@ -321,55 +374,94 @@ $(function() {
             if (obj.width() >= 200) {
               obj.xlength = 200;
               //obj.height = 200;
-              clearInterval(iv);
-              obj.onclick = openImage;
-              friends.bigImg = obj;
-              obj.state = 'in';
+              
+              // If the other image has not yet reached its min size then do nothing and wait
+              if (friends.bigImg == null)
+              {
+                clearInterval(iv);
+                obj.onclick = openImage;
+                friends.bigImg = obj;
+                obj.state = 'in';
+              }
+              
             }
 
             if (obj.width() <= SZ) {
               obj.xlength = SZ;
-              obj.deg = origDeg;
+              //obj.deg = origDeg;
               //obj.height = SZ;
               clearInterval(iv);
               obj.onclick = openImage;            
               friends.bigImg = null;
               obj.state = 'out';
+              fgLayer.remove(obj);
             }
-          }, 10);
+          }, 30);
         };
         
         function shakeImage() {
-          obj.bringToTop();
-          obj.deg = 45;
+              var friend = obj.friend;
+              var st = obj.state;
+              obj = createPolaroid(obj.image, obj.xcoor, obj.ycoor, obj.width(), obj.label, null, 45, obj.friend.id);
+              obj.friend = friend;
+              obj.state = st;
+              obj.needsRefresh = true;
+              //obj.deg = 0;
+              fgLayer.add(obj);
+          
+          
+          //obj.bringToTop();
+          //obj.deg = 45;
           var counter = 0;
 
           var iv = setInterval(function() {
             // Shake
             obj.deg *= -1;
             counter++;
+            fgLayer.remove(obj);
+            fgLayer.add(obj);
             if (counter >= 20) { //2 secs
               obj.deg = 0;
               clearInterval(iv);
+              fgLayer.remove(obj);
               dropImage();
             }
           }, 10);
         };
 
         function dropImage() {
-          obj.bringToTop();
+          //obj.bringToTop();
+          //fgLayer.remove(obj);
+          //fgLayer.add(obj);
+          var friend = obj.friend;
+            var st = obj.state;
+            obj = createPolaroid(obj.image, obj.xcoor, obj.ycoor, obj.width(), obj.label, null, 0, obj.friend.id);
+            obj.friend = friend;
+            obj.state = st;
+            obj.needsRefresh = true;
+            //obj.deg = 0;
+            fgLayer.add(obj);
 
           var iv = setInterval(function() {
+            fgLayer.remove(obj);
+            fgLayer.add(obj);
             obj.ycoor += 
               //(obj.height / 2) +
               25 +  
               (obj.ycoor / 7); //Acceleration
 
             obj.alpha -= 0.1  
-            if (obj.ycoor + obj.height() >= canvas.height) {
+            if (obj.ycoor + obj.height() >= fgCanvas.height) {
               clearInterval(iv);
               obj.visible = false;
-              layer.remove(obj);
+              fgLayer.remove(obj);
+              Object.keys(bgLayer._objects).forEach(function(key) {
+                    if(bgLayer._objects[key].fbid == obj.fbid)
+                    {
+                    
+                        bgLayer.remove(bgLayer._objects[key]);
+                    }      
+              });
             } 
           }, 30);
         };
@@ -379,7 +471,7 @@ $(function() {
 
         x += SZ;
 
-        if (x > canvas.width) {
+        if (x > fgCanvas.width) {
           y += SZ;
           x = 0;
         }
@@ -394,14 +486,14 @@ $(function() {
   var refreshButton = null;
   refreshImage.onload = function() {
     console.log('adding refresh');
-    refreshButton = createImage(refreshImage, canvas.width / 3, canvas.height - 70, 50, 50);
+    refreshButton = createImage(refreshImage, fgCanvas.width / 3, fgCanvas.height - 70, 50, 50);
     refreshButton.onclick = function() {
       window.location.reload();
     };
     refreshButton.ondrop = function() {
       return;
     };
-    layer.add(refreshButton);
+    bgLayer.add(refreshButton);
   };
 
   var pairImage = new Image();
@@ -409,7 +501,7 @@ $(function() {
   var pairButton = null;
   pairImage.onload = function() {
     console.log('adding pair');
-    pairButton = createImage(pairImage, canvas.width / 3 * 2, canvas.height - 70, 50, 50);
+    pairButton = createImage(pairImage, fgCanvas.width / 3 * 2, fgCanvas.height - 70, 50, 50);
     pairButton.onclick = function() {
       console.log('pairing...');
       pair();
@@ -417,9 +509,8 @@ $(function() {
     pairButton.ondrop = function() {
       return;
     };
-    layer.add(pairButton);
+    bgLayer.add(pairButton);
   };
-
 });
 
 function createText(view) {
@@ -456,6 +547,9 @@ function createPolaroid(im, x, y, width, label, alpha, deg, fbid) {
     shadowOffsetY: 1.0,
     radius: 3,
     deg: deg,
+    needsRefresh: true,
+    label: label,
+    image: im,
 
     x: function() 
     { 
