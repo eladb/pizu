@@ -237,7 +237,7 @@ function pair() {
 }
 
 function loadFriendsImages(friends,minLoadingFriendNumber){
-  var maxShowFriends = 30;
+  var maxShowFriends = 25;
   var randomNumber = Math.floor((Math.random()*(friends.length - maxShowFriends)));
   var sliceLength = Math.min(friends.length,maxShowFriends);
   var loadingFriendsArray = friends.slice(randomNumber,randomNumber+sliceLength);
