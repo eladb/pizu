@@ -87,7 +87,7 @@
        
     ul.polaroids li a:hover {
       -webkit-transform: scale(1.5);
-      -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.5);
+      -webkit-box-shadow: 0 8px 6px -6px black;
       position: relative;
       z-index: 10;
       -webkit-transition: -webkit-transform 1s ease-in-out;
@@ -117,7 +117,7 @@
       font-family: "Marker Felt", sans-serif;
       text-decoration: none;
       color: white;
-      font-size: 18px;
+      font-size: 19px;
       margin-top: -95px;
       margin-left: 90px;
       
@@ -160,27 +160,75 @@
       background: #2F2C2C;  
     }
 
-    #alert
-    {
-      overflow: hidden;
-      z-index: 999;
-      width: 100%;
-      text-align: center;
+    #alert {
+      position: relative;
+    }
+
+    .dismissAlert {
+      background: hsla(0,0%,0%,.8);
+      border-radius: 3px;
+      color: #f6f6f6;
+      font: bold 12px/30px sans-serif;
+      height: 30px;
+      left: 50%;
+      display: block;
+      margin-left: -60px;
       position: absolute;
-      top: 0;
-      left: 0;
-      background-color: #fff;
-      height: 0;
-      color: #000;
-      font: 20px/40px arial, sans-serif;
-      opacity: .9;
+      text-align: center;
+      top: -140px;
+      margin-top: 80px;
+      width: 120px;
+      z-index:100;
+    }
+
+    .alert {
+      background-color: #c4453c;
+      background-image: -webkit-linear-gradient(135deg, transparent,
+                        transparent 25%, hsla(0,0%,0%,.05) 25%,
+                        hsla(0,0%,0%,.05) 50%, transparent 50%,
+                        transparent 75%, hsla(0,0%,0%,.05) 75%,
+                        hsla(0,0%,0%,.05));
+      background-size: 20px 20px;
+      -webkit-box-shadow: 0 5px 0 hsla(0,0%,0%,.1);
+      color: #f6f6f6;
+      font: bold 16px/40px sans-serif;
+      height: 130px;
+      position: absolute;
+      text-align: center;
+      text-decoration: none;
+      top: -140px;
+      width: 100%;
+      z-index:100;
+    }
+
+    .openAlert{
+      -webkit-animation: showAlert 1s ease forwards;
+    }
+
+    .closeAlert{
+      -webkit-animation: closeAlert 1s ease forwards;
+    }
+
+    @-webkit-keyframes closeAlert {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { top: -140px; }
+    }
+
+    @-webkit-keyframes showAlert {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { top: 0; }
     }
 
   </style>
 </head>
 <div id="fb-root"></div>
 <body>
-    <div id="alert"></div>
+    <div id="alert">
+      <span class="alert"></span>
+      <span class="dismissAlert" onclick="closeAlert()">Click to dismiss</span>
+    </div>​
     <div id="dvProgress"> 
         <!--<img src="img/searching.gif" style="vertical-align: middle" alt="Processing" />-->
         loading application ...

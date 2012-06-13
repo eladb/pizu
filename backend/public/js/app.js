@@ -206,7 +206,8 @@ function pair() {
           }
         }
       }).fail(function(jqxhr, textStatus, body) {
-        alert(body);
+        openAlert(body);
+        //alert(body);
         $('#searching').css("visibility","hidden");
         startWatch();
       });
@@ -237,25 +238,29 @@ function pair() {
 }
 
 function loadFriendsImages(friends,minLoadingFriendNumber){
-  return friends.forEach(function(friend) {
+  var maxShowFriends = 30;
+  var randomNumber = Math.floor((Math.random()*(friends.length - maxShowFriends)));
+  var sliceLength = Math.min(friends.length,maxShowFriends);
+  var loadingFriendsArray = friends.slice(randomNumber,randomNumber+sliceLength);
+  var loadingFriendIndex = 1;
+
+  return loadingFriendsArray.forEach(function(friend) {
     var imageURL = 'https://graph.facebook.com/' + friend.id + '/picture';
     var img = new Image();
     img.src = imageURL;
-
-    index = 0;
+    
     img.onload = function() {
-      if(index == minLoadingFriendNumber){
+           
+      var firstName=friend.name.split(" ")[0];
+      //var line = "<li><a href=\"" + imageURL + "\" title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
+      var line = "<li><a title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
+      $('ul').append(line);
+
+      if(loadingFriendIndex == minLoadingFriendNumber){
         afterLoadMinimalFriends();
       }
 
-      if(index < 30)
-      {
-        var firstName=friend.name.split(" ")[0];
-        //var line = "<li><a href=\"" + imageURL + "\" title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
-        var line = "<li><a href=\"#\" title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
-        $('ul').append(line);
-      }
-      index++;
+      loadingFriendIndex++;
     };
   });
 }
@@ -263,6 +268,15 @@ function loadFriendsImages(friends,minLoadingFriendNumber){
 function afterLoadMinimalFriends() {
   $('ul.polaroids').css("visibility","visible");
   startWatch();  
+}
+
+function closeAlert(){
+    $('#alert span').removeClass("openAlert").addClass("closeAlert");
+}
+
+function openAlert(body){
+  $('.alert').text(body);
+  $('#alert span').removeClass("closeAlert").addClass("openAlert");
 }
 
 
