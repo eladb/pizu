@@ -55,13 +55,17 @@ $(function() {
   }, false);
 });
 
+var int = null;
+
 function shakeAnimation() {
   console.log("shake it shake it baby ...");
   var img = document.getElementById('shakeIphone');
   img.className = 'shake';
   img.addEventListener('webkitAnimationEnd', function(){
     this.className = '';
-  });
+  });  
+
+  
 
   //$('div#shake img').removeClass("");
   //console.log($('div#shake img'));
@@ -86,6 +90,7 @@ function startWatch() {
   console.log('visible');
   $('div#shake').css("visibility","visible");
   shakeAnimation();
+  int = setInterval(shakeAnimation,7000);
 
   if (!('accelerometer' in navigator)) {
     console.log('no accelerometer');
@@ -121,6 +126,7 @@ function startWatch() {
 }
 
 function shaken(){
+  clearInterval(int);
   $('div#shake').css("visibility","hidden");
   navigator.accelerometer.clearWatch(watchID);
   navigator.notification.vibrate(2500);
@@ -206,26 +212,24 @@ function pair() {
           }
         }
       }).fail(function(jqxhr, textStatus, body) {
-        openAlert(jqxhr.responseText);
         $('#searching').css("visibility","hidden");
-        startWatch();
+        openAlert(jqxhr.responseText,'closePairFailureAlert()');
       });
     }, function (error) {
       $('#searching').css("visibility","hidden");
-      startWatch();
       switch(error.code) 
       {
         case error.TIMEOUT:
-          alert ('Timeout');
+          openAlert('Timeout','closePairFailureAlert()');
           break;
         case error.POSITION_UNAVAILABLE:
-          alert ('Position unavailable');
+          openAlert('Position unavailable','closePairFailureAlert()');
           break;
         case error.PERMISSION_DENIED:
-          alert ('Permission denied');
+          openAlert('Permission denied','closePairFailureAlert()');
           break;
         case error.UNKNOWN_ERROR:
-          alert ('Unknown error');
+          openAlert('Unknown error','closePairFailureAlert()');
           break;
       }
     });
@@ -268,13 +272,25 @@ function afterLoadMinimalFriends() {
   startWatch();  
 }
 
-function closeAlert(){
-    $('#alert span').removeClass("openAlert").addClass("closeAlert");
+function closePairFailureAlert(){
+  //$.unblockUI();
+  $('#alert span').removeClass("openAlert").addClass("closeAlert");
+  //var alert = document.getElementById('alert');
+  console.log($('#alert span'));
+  //alert.className += 'closeAlert';
+  startWatch();
 }
 
-function openAlert(body){
+function openAlert(body,closeAlertDelegate){
+  //set the close callback
+  $('.dismissAlert').attr('onclick','').attr('onclick',closeAlertDelegate);
   $('.alert').text(body);
   $('#alert span').removeClass("closeAlert").addClass("openAlert");
+  //$.blockUI({ onBlock: function() { 
+    //          }  
+    //        }); 
+  
+  
 }
 
 
