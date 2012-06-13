@@ -19,7 +19,7 @@ $(function() {
       cid = response.id;
 
       FB.api('/me/friends', function(friendsData) {
-        loadFriendsImages(friendsData.data,30);
+        loadFriendsImages(friendsData.data,20);
       });
     });
   }
@@ -249,7 +249,6 @@ function loadFriendsImages(friends,minLoadingFriendNumber){
     img.src = imageURL;
     
     img.onload = function() {
-           
       var firstName=friend.name.split(" ")[0];
       //var line = "<li><a href=\"" + imageURL + "\" title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
       var line = "<li><a title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
