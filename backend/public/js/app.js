@@ -206,8 +206,7 @@ function pair() {
           }
         }
       }).fail(function(jqxhr, textStatus, body) {
-        openAlert(body);
-        //alert(body);
+        openAlert(jqxhr.responseText);
         $('#searching').css("visibility","hidden");
         startWatch();
       });
