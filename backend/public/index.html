@@ -44,6 +44,7 @@
       -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.25);
       -webkit-transform: rotate(-2deg);
       -webkit-transition: -webkit-transform .15s linear;
+      -webkit-filter: grayscale(100%);
     }
 
     ul.polaroids img {
@@ -93,6 +94,7 @@
     ul.polaroids li a:hover {
       -webkit-transform: scale(1.5);
       -webkit-box-shadow: 0 8px 6px -6px black;
+      -webkit-filter: grayscale(0%);
       position: relative;
       z-index: 10;
       -webkit-transition: -webkit-transform 1s ease-in-out;
@@ -127,12 +129,14 @@
    
     /* This is the animation code. */
     @-webkit-keyframes shake {
-       0% { -webkit-transform: rotate(-10deg); }
-       100% { -webkit-transform: rotate(10deg); }
+       0% { -webkit-transform: rotate(0deg); }
+       25% { -webkit-transform: rotate(-10deg); }
+       75% { -webkit-transform: rotate(10deg); }
+       100% { -webkit-transform: rotate(0deg); }
     }
 
     .shake{
-      -webkit-animation: shake 0.7s ease-in-out 0s 4 alternate;
+      -webkit-animation: shake 1s linear 0s 4 normal;
     }
 
     #dvProgress{
