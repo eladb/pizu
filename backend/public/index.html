@@ -23,7 +23,7 @@
 
     ul.polaroids {
       width: 100%;
-      margin: 0 0 18px -30px;
+      margin: 0 0 30px -18px;
       visibility: hidden;
     }
 
@@ -94,7 +94,7 @@
     }
        
     ul.polaroids li a:hover {
-      -webkit-transform: scale(1.5);
+      -webkit-transform: scale(2.25);
       -webkit-box-shadow: 0 8px 6px -6px black;
       position: relative;
       z-index: 10;
@@ -283,8 +283,8 @@
     </div>
     <div id="alert">
       <span class="alert"></span>
-      <span class="dismissAlert" onclick="">Click to dismiss</span>
-    </div>​
+      <span class="dismissAlert" onclick="closeAlert()">Click to dismiss</span>
+    </div>
     <div id="dvProgress"> 
         <!--<img src="img/searching.gif" style="vertical-align: middle" alt="Processing" />-->
         Loading application ...
@@ -298,8 +298,7 @@
         <span>Shake It...</span>
     </div>
     <div id="container">
-        <ul class="polaroids">
-        </ul>
+        <ul class="polaroids"></ul>
     </div>
 </body>
 </html>
