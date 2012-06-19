@@ -256,7 +256,7 @@ function loadFriendsImages(friends,minLoadingFriendNumber){
       var firstName=friend.name.split(" ")[0];
       //var line = "<li><a href=\"" + imageURL + "\" title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
       var line = "<li><a title=\""+ firstName +"\">"+img.outerHTML+"</img></a></li>";
-      $('ul').append(line);
+      $('ul.polaroids').append(line);
 
       if(loadingFriendIndex == minLoadingFriendNumber){
         afterLoadMinimalFriends();

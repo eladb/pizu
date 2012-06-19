@@ -33,7 +33,8 @@
 
     ul.polaroids a {
       background: #fff;
-      display: inline; float: left;
+      display: inline;
+      float: left;
       width: auto;
       padding: 5px 5px 10px;
       text-align: center;
@@ -63,13 +64,15 @@
     }
 
     ul.polaroids li:nth-child(3n) a {
-      z-index: 5; -webkit-transform: none;
+      z-index: 5;
+      -webkit-transform: none;
       position: relative;
       top: -5px;
     }
 
     ul.polaroids li:nth-child(5n) a {
-      z-index: 3; -webkit-transform: rotate(-20deg);
+      z-index: 3;
+      -webkit-transform: rotate(-10deg);
       position: relative;
       right: 5px;
     }
@@ -79,7 +82,7 @@
       position: relative;
       right: 5px;
       top: 8px;
-      -webkit-transform: rotate(-15deg);
+      -webkit-transform: rotate(15deg);
     }
 
     ul.polaroids li:nth-child(11n) a {
@@ -179,7 +182,7 @@
       margin-left: -60px;
       position: absolute;
       text-align: center;
-      top: -140px;
+      top: -185px;
       margin-top: 80px;
       width: 120px;
       z-index:100;
@@ -200,7 +203,7 @@
       position: absolute;
       text-align: center;
       text-decoration: none;
-      top: -140px;
+      top: -185px;
       width: 100%;
       z-index:100;
     }
@@ -216,19 +219,68 @@
     @-webkit-keyframes hideAlert {
       0% { opacity: 1; }
       50% { opacity: 0; }
-      100% { top: -140px; }
+      100% { top: -185px; }
     }
 
     @-webkit-keyframes showAlert {
       0% { opacity: 0; }
       50% { opacity: 1; }
-      100% { top: 0; }
-    }    
+      100% { top: -45px; }
+    }  
+
+    h1 {
+      color: white;
+      font-family: Helvetica;
+      font-size: 20px;
+      font-weight: bold;
+      margin: auto;
+      overflow: hidden;
+      text-align: center;
+      text-overflow: ellipsis;
+      text-shadow: rgba(0, 0, 0, 0.4) 0px -1px 0px;
+      white-space: nowrap;
+      width: 150px;
+    }
+
+    #header {
+      background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#484866), to(#404040), color-stop(.7,#333333));
+      padding: 7px 10px;
+      background-color: rgb(109, 132, 162);
+      border-bottom-color:1px solid rgb(45, 54, 66);
+      border-top:1px solid rgb(109, 132, 162);
+      height: 31px;
+      line-height: 30px;
+      display: block;
+      border-bottom: 1px solid #2C3542;
+      border-top: 1px solid #CDD5DF;
+    } 
+    
+    ul.nav img{
+      position: absolute;
+      /*margin-top: -50px;
+      margin-left: 200px;*/
+      top:3%;
+      left:90%;
+      z-index : 20;
+      height: 25px;
+    }
+
+    ul.nav li{
+      display: inline;
+    }
 
   </style>
-</head>
-<div id="fb-root"></div>
-<body>
+  </head>
+  <div id="fb-root"></div>
+  <body>
+    <div id='header'>
+      <h1>Ponchu</h1>
+      <ul class="nav">
+        <li>
+          <img id="information" src="img/information2.png" alt="Information">
+        </li>
+      </ul>
+    </div>
     <div id="alert">
       <span class="alert"></span>
       <span class="dismissAlert" onclick="">Click to dismiss</span>
