@@ -55,6 +55,26 @@ $(function() {
   }, false);
 });
 
+function logOut(){
+  var browser = 
+    navigator.userAgent.indexOf('Chrome') !== -1;
+
+  if (browser) {
+    // for browsers  
+    FB.logout(function(s) {
+      console.log(s);
+      return location.reload();
+    });
+  }
+
+  CDV.FB.logout(function(s) {
+    console.log(s);
+    return location.reload();
+  });
+
+  
+}
+
 var int = null;
 
 function shakeAnimation() {
