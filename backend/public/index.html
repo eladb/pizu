@@ -3,6 +3,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
+    <link rel="stylesheet" href="css/jquery.mobile-1.1.0.min.css" />
+    
     <script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
     <script src='js/jquery-transit.js'></script>
     <script src='js/jquery.blockUI.js'></script>
@@ -10,7 +12,10 @@
     <script src='js/cordova-1.7.0.js' type='text/javascript'></script>
     <script src='js/cdv-plugin-fb-connect.js' type='text/javascript'></script>
     <script src="js/geohash.js" type="text/javascript"></script>
-    <script src="js/app.js" type="text/javascript"></script>
+    <script src="js/app.js" type="text/javascript"></script> 
+
+    <script src="js/jquery.mobile-1.1.0.min.js"></script>
+   
     
     <style>
     body {
@@ -182,10 +187,10 @@
       margin-left: -60px;
       position: absolute;
       text-align: center;
-      top: -185px;
+      top: -130px;
       margin-top: 80px;
       width: 120px;
-      z-index:100;
+      z-index:9999;
     }
 
     .alert {
@@ -203,9 +208,9 @@
       position: absolute;
       text-align: center;
       text-decoration: none;
-      top: -185px;
+      top: -130px;
       width: 100%;
-      z-index:100;
+      z-index:9999;
     }
 
     .openAlert{
@@ -219,16 +224,16 @@
     @-webkit-keyframes hideAlert {
       0% { opacity: 1; }
       50% { opacity: 0; }
-      100% { top: -185px; }
+      100% { top: -130px; }
     }
 
     @-webkit-keyframes showAlert {
       0% { opacity: 0; }
       50% { opacity: 1; }
-      100% { top: -45px; }
+      100% { top: 0px; }
     }  
 
-    h1 {
+     /*h1 {
       color: white;
       font-family: Helvetica;
       font-size: 20px;
@@ -242,7 +247,7 @@
       width: 150px;
     }
 
-    #header {
+    .header {
       background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#484866), to(#404040), color-stop(.7,#333333));
       padding: 7px 10px;
       background-color: rgb(109, 132, 162);
@@ -255,32 +260,74 @@
       border-top: 1px solid #CDD5DF;
     } 
     
-    ul.nav img{
+    img#information{
       position: absolute;
       /*margin-top: -50px;
-      margin-left: 200px;*/
-      top:4%;
+      margin-left: 200px;*//*
+      top:10%;
       left:85%;
       z-index : 20;
-      height: 25px;
+      height: 100px;
     }
 
     ul.nav li{
-      display: inline;
+      list-style: none;
     }
+
+    .button {
+       font-family: Helvetica ;
+       font-weight: bold ;
+       padding: 15px; 
+       border: 1px solid black ;
+       -moz-border-radius: 8px ;
+       -webkit-border-radius: 8px ; 
+       margin-top: 10px ;
+       margin-bottom: 10px ;
+       background-color: white ;
+    }*/
+
+    
+
+    .ui-icon-infoIcon{
+      background-image: url("img/information2.png");
+      background-size: 18px 18px;
+    }
+
+    
+
 
   </style>
   </head>
   <div id="fb-root"></div>
   <body>
-    <div id='header'>
-      <h1>Ponchu</h1>
-      <ul class="nav">
-        <li>
-          <img id="information" src="img/information2.png" alt="Information">
-        </li>
-      </ul>
+    <div data-role="page" id="home" data-theme="a"> 
+      <div data-role="header" data-position="fixed">
+        <h1>Ponchu</h1>
+        <a href="#settings" data-rel="dialog" data-role="button" data-transition="turn" data-icon="infoIcon" class="ui-btn-right" data-iconpos="notext" data-inline="true" >information</a>  
+      </div>
+
+      <div data-role="content" >
+        <div id="shake">
+          <img id="shakeIphone" src="img\shakeIphone1.png" onclick="pair()">
+          <span>Shake It...</span>
+        </div>
+        <div id="container">
+          <ul class="polaroids">
+          </ul>
+        </div>
+      </div>
     </div>
+
+    <div data-role="page" id="settings">
+      <div data-role="header" data-theme="d">
+        <h1>Settings</h1>
+      </div> 
+      <div data-role="content" data-theme="d">
+        <span data-role="button">Log out</span>
+        <a href="#home" data-role="button" data-transition="turn">Cancel</a>
+      </div>
+    </div>
+
     <div id="alert">
       <span class="alert"></span>
       <span class="dismissAlert" onclick="closeAlert()">Click to dismiss</span>
@@ -292,13 +339,6 @@
     <div id="searching"> 
         <img src="img/searching.gif" style="vertical-align: middle" alt="Searching" />
         Searching ...
-    </div>
-    <div id="shake">
-        <img id="shakeIphone" src="img\shakeIphone1.png" onclick="pair()">
-        <span>Shake It...</span>
-    </div>
-    <div id="container">
-        <ul class="polaroids"></ul>
     </div>
 </body>
 </html>
