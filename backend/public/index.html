@@ -23,7 +23,7 @@
     }
     
     #container{
-      margin-top:-30px;
+      margin-top:50px;
     }
 
     ul.polaroids {
@@ -187,7 +187,7 @@
       margin-left: -60px;
       position: absolute;
       text-align: center;
-      top: -130px;
+      top: -180px;
       margin-top: 80px;
       width: 120px;
       z-index:9999;
@@ -208,7 +208,7 @@
       position: absolute;
       text-align: center;
       text-decoration: none;
-      top: -130px;
+      top: -180px;
       width: 100%;
       z-index:9999;
     }
@@ -224,13 +224,13 @@
     @-webkit-keyframes hideAlert {
       0% { opacity: 1; }
       50% { opacity: 0; }
-      100% { top: -130px; }
+      100% { top: -180px; }
     }
 
     @-webkit-keyframes showAlert {
       0% { opacity: 0; }
       50% { opacity: 1; }
-      100% { top: 0px; }
+      100% { top: -50px; }
     }  
 
      /*h1 {
@@ -293,6 +293,9 @@
       background-size: 18px 18px;
     }
 
+    #settings{
+      z-index : 99999;
+    }
     
 
 
@@ -306,16 +309,7 @@
         <a href="#settings" data-rel="dialog" data-role="button" data-transition="slideup" data-icon="infoIcon" class="ui-btn-right" data-iconpos="notext" data-inline="true" >information</a>  
       </div>
 
-      <div data-role="content" >
-        <div id="shake">
-          <img id="shakeIphone" src="img\shakeIphone1.png" onclick="pair()">
-          <span>Shake It...</span>
-        </div>
-        <div id="container">
-          <ul class="polaroids">
-          </ul>
-        </div>
-      </div>
+      
     </div>
 
     <div data-role="page" id="settings">
@@ -340,5 +334,13 @@
         <img src="img/searching.gif" style="vertical-align: middle" alt="Searching" />
         Searching ...
     </div>
+    <div id="shake">
+          <img id="shakeIphone" src="img\shakeIphone1.png" onclick="pair()">
+          <span>Shake It...</span>
+        </div>
+        <div id="container">
+          <ul class="polaroids">
+          </ul>
+        </div>
 </body>
 </html>
