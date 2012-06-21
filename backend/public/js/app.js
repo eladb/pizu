@@ -188,7 +188,7 @@ function pair() {
             FB.api(graph, function(res) {
               console.log('response:'+JSON.stringify(res));
               var friends = res.data;
-                  location.href = "mutual friends.html";
+                  location.href = "MutualFriends.html";
 //                //showFriends(friends);
 //                //stop backround animation
 //                clearInterval(backroundIntervalId);
