@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Moving Boxes</title>
+	
+	<!-- Required CSS -->
+	<link href="css/movingboxes.css" media="screen" rel="stylesheet">
+	<!--[if lt IE 9]>
+	<link href="css/movingboxes-ie.css" rel="stylesheet" media="screen" />
+	<![endif]-->
+	
+	<!-- Required script -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+	<script src="js/jquery.movingboxes.js"></script>
+
+	<!-- Demo only -->
+	<link href="demo/demo.css" media="screen" rel="stylesheet">
+	<style>
+		/* Dimensions set via css in MovingBoxes version 2.2.2+ */
+		#slider { width: 500px; }
+		#slider li { width: 250px; }
+	</style>
+	<script>
+	$(function(){
+
+		$('#slider').movingBoxes({
+			/* width and panelWidth options deprecated, but still work to keep the plugin backwards compatible
+			width: 500,
+			panelWidth: 0.5,
+			*/
+			startPanel   : 1,      // start with this panel
+			wrap         : false,   // if true, the panel will "wrap" (it really rewinds/fast forwards) at the ends
+			buildNav     : true,   // if true, navigation links will be added
+			navFormatter : function(){ return "&#9679;"; } // function which returns the navigation text for each panel
+		});
+
+	});
+	</script>
+</head>
+<body>
+
+<div id="wrapper">
+
+	<div id="title">
+		<a href="http://github.com/chriscoyier/MovingBoxes"><img src="demo/movingboxes.png" alt="moving boxes"></a>
+	</div>
+
+	<div id="nav">
+		<a href="index.html">Main Demo</a>
+		<a class="current" href="basic.html">Basic Demo</a>
+		<a class="play" href="http://jsfiddle.net/Mottie/jMXx3/">Playground</a>
+		<a class="git" href="https://github.com/chriscoyier/MovingBoxes/wiki">Documentation</a>
+		<a class="git" href="https://github.com/chriscoyier/MovingBoxes/downloads">Download</a>
+		<a class="issue" href="https://github.com/chriscoyier/MovingBoxes/issues">Issues</a>
+	</div>
+	<br>
+
+	<!-- MovingBoxes Slider -->
+	<ul id="slider">
+
+		<li>
+			<img src="demo/1.jpg" alt="picture">
+			<h2>News Heading</h2>
+			<p>Add a short exerpt here... <a href="http://flickr.com/photos/justbcuz/112479862/">more</a></p>
+		</li>
+
+		<li>
+			<img src="demo/2.jpg" alt="picture">
+			<h2>News Heading</h2>
+			<p>Add a short exerpt here... <a href="http://flickr.com/photos/joshuacraig/2698975899/">more</a> and a whole lot more text goes here, so we can see the height adjust.</p>
+		</li>
+
+		<li>
+			<img src="demo/3.jpg" alt="picture">
+			<h2>News Heading</h2>
+			<p>Add a short exerpt here... <a href="http://flickr.com/photos/ruudvanleeuwen/468309897/">more</a></p>
+		</li>
+
+		<li>
+			<img src="demo/4.jpg" alt="picture">
+			<h2>News Heading</h2>
+			<p>Add a short exerpt here... <a href="http://flickr.com/photos/emikohime/294092478/">more</a></p>
+		</li>
+
+		<li>
+			<img src="demo/5.jpg" alt="picture">
+			<h2>News Heading</h2>
+			<p>Add a short exerpt here... <a href="http://www.flickr.com/photos/fensterbme/499006584/">more</a></p>
+		</li>
+
+		<li>
+			<img src="demo/6.jpg" alt="picture">
+			<h2>News Heading</h2>
+			<p>Add a short exerpt here... <a href="#">more</a></p>
+		</li>
+
+	</ul> <!-- end Slider #1 -->
+
+</div> <!-- end wrapper -->
+
+</body>
+</html>
