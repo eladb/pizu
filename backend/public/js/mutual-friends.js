@@ -53,7 +53,7 @@ $(function () {
 
             $('#slider').movingBoxes({
                 startPanel: 1,      // start with this panel
-                wrap: false,   // if true, the panel will "wrap" (it really rewinds/fast forwards) at the ends
+                wrap: true,   // if true, the panel will "wrap" (it really rewinds/fast forwards) at the ends
                 buildNav: false,   // if true, navigation links will be added
                 navFormatter: function () { return "&#9679;"; } // function which returns the navigation text for each panel
             });
