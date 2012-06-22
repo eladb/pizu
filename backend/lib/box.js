@@ -1,7 +1,7 @@
 module.exports = function(options) {
   options = options || {};
   var capacity = options.capacity || 2;
-  var ttl = options.ttl || 5000;
+  var ttl = options.ttl || 2000;
 
   var api = new process.EventEmitter();
 
