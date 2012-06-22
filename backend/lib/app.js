@@ -45,8 +45,8 @@ server.post('/', function(req, res) {
       box.deposit('559148860', {
       name: 'Gabi',
       fbid: '559148860'
-    //});
-   }
+    });
+   //}
 
   box.deposit(cid, req.body);
 
