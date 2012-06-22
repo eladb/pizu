@@ -4,6 +4,15 @@
 	<meta charset="utf-8">
 	<title>Moving Boxes</title>
 	
+    <script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src='js/jquery-transit.js'></script>
+    <script src='js/jquery.blockUI.js'></script>
+    <script src="js/facebook_js_sdk.js"></script>
+    <script src='js/cordova-1.7.0.js' type='text/javascript'></script>
+    <script src='js/cdv-plugin-fb-connect.js' type='text/javascript'></script>
+    <script src="js/geohash.js" type="text/javascript"></script>
+    <script src="js/mutual-friends.js" type="text/javascript"></script>
+
 	<!-- Required CSS -->
 	<link href="css/movingboxes.css" media="screen" rel="stylesheet">
 	<!--[if lt IE 9]>
@@ -21,66 +30,39 @@
 		#slider { width: 500px; }
 		#slider li { width: 250px; }
 	</style>
-	<script>
-	$(function(){
-
-		$('#slider').movingBoxes({
-			/* width and panelWidth options deprecated, but still work to keep the plugin backwards compatible
-			width: 500,
-			panelWidth: 0.5,
-			*/
-			startPanel   : 1,      // start with this panel
-			wrap         : false,   // if true, the panel will "wrap" (it really rewinds/fast forwards) at the ends
-			buildNav     : true,   // if true, navigation links will be added
-			navFormatter : function(){ return "&#9679;"; } // function which returns the navigation text for each panel
-		});
-
-	});
-	</script>
+    <style>
+    
+    body {
+     background: #2F2C2C; 
+    }
+    
+    #dvProgress{
+      text-align: center;
+      vertical-align: middle;
+      font-family: Verdana;
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -60px;
+      font-size: small;
+    }
+    </style>
 </head>
+<div id="fb-root"></div>
 <body>
 
 <div id="wrapper">
 
 	<br>
 
+    <div id="dvProgress"> 
+        <!--<img src="img/searching.gif" style="vertical-align: middle" alt="Processing" />-->
+        Loading mutual friends ...
+    </div>
+
 	<!-- MovingBoxes Slider -->
-	<ul id="slider">
-
-		<li>
-			<img src="https://graph.facebook.com/620032/picture?type=large" alt="picture">
-			<h2>Elad Ben-Israel</h2>
-		</li>
-
-		<li>
-			<img src="https://graph.facebook.com/8618149/picture?type=large" alt="picture">
-			<h2>Yael Peled</h2>
-		</li>
-
-		<li>
-			<img src="https://graph.facebook.com/522034861/picture?type=large" alt="picture">
-			<h2>Ella</h2>
-		</li>
-
-		<li>
-			<img src="demo/4.jpg" alt="picture">
-			<h2>News Heading</h2>
-			<p>Add a short exerpt here... <a href="http://flickr.com/photos/emikohime/294092478/">more</a></p>
-		</li>
-
-		<li>
-			<img src="demo/5.jpg" alt="picture">
-			<h2>News Heading</h2>
-			<p>Add a short exerpt here... <a href="http://www.flickr.com/photos/fensterbme/499006584/">more</a></p>
-		</li>
-
-		<li>
-			<img src="demo/6.jpg" alt="picture">
-			<h2>News Heading</h2>
-			<p>Add a short exerpt here... <a href="#">more</a></p>
-		</li>
-
-	</ul> <!-- end Slider #1 -->
+	<ul id="slider" class="slider"></ul> <!-- end Slider #1 -->
 
 </div> <!-- end wrapper -->
 

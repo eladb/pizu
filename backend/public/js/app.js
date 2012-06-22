@@ -12,7 +12,7 @@ var APP_ID = '146577522141106';
   var name = null;
 
 $(function() {
-
+  console.log("baa");
   function after_login() {
     FB.api('/me', function(response) {
       name = response.name;
@@ -80,10 +80,14 @@ var int = null;
 function shakeAnimation() {
   console.log("shake it shake it baby ...");
   var img = document.getElementById('shakeIphone');
-  img.className = 'shake';
-  img.addEventListener('webkitAnimationEnd', function(){
+  if (img != null) {
+    img.className = 'shake';
+    img.addEventListener('webkitAnimationEnd', function(){  
     this.className = '';
-  });  
+    });
+  }
+  
+    
 
   
 
@@ -201,14 +205,21 @@ function pair() {
 
             console.log('found other payload:', payload[k]);
 
+            
+
             var fbid = other.fbid;
 
-            var graph = '/me/mutualfriends/' + fbid;
+            location.href = "MutualFriends.html#&otherid=" + fbid;
 
-            FB.api(graph, function(res) {
-              console.log('response:'+JSON.stringify(res));
-              var friends = res.data;
-                  location.href = "MutualFriends.html";
+//            var graph = '/me/mutualfriends/' + fbid;
+
+//            FB.api(graph, function(res) {
+//              console.log('response:'+JSON.stringify(res));
+//              var friends = res.data;
+                  
+                  
+                  
+                  
 //                //showFriends(friends);
 //                //stop backround animation
 //                clearInterval(backroundIntervalId);
@@ -229,7 +240,7 @@ function pair() {
 //                    sharedFriends.push(img);
 //                  }; 
 //                };
-            });
+            //});
           }
         }
       }).fail(function(jqxhr, textStatus, body) {
@@ -259,6 +270,11 @@ function pair() {
     $('#searching').css("visibility","hidden");
     startWatch();
   }
+
+
+  
+var d = 5;
+
 }
 
 function loadFriendsImages(friends,minLoadingFriendNumber){
