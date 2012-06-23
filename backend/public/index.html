@@ -293,11 +293,17 @@
       background-size: 18px 18px;
     }
 
-    #settings{
+    #settings,#howto{
       z-index : 99999;
     }
-    
 
+    .text{
+      text-shadow: 1px 1px 1px #000;
+    }
+
+    /*remove cancel button from this specific dialog*/
+    .ui-how-to-dialog .ui-header a.ui-btn { display:none; }
+    
 
   </style>
   </head>
@@ -305,18 +311,28 @@
   <body>
     <div data-role="page" id="home" data-theme="a"> 
       <div data-role="header" data-position="fixed">
-        <h1>Ponchu</h1>
+        <h1>Poncho</h1>
         <a href="#settings" data-rel="dialog" data-role="button" data-transition="pop" data-icon="infoIcon" class="ui-btn-right" data-iconpos="notext" data-inline="true" >information</a>  
       </div>
     </div>
 
     <div data-role="page" id="settings">
-      <div data-role="header" data-theme="d">
+      <div data-role="header" data-theme="a">
         <h1>Settings</h1>
       </div> 
+      <div data-role="content">
+        <a href="#howto" data-rel="dialog" data-theme="d" data-role="button">How to use?</a>
+        <a class ="logOut" href="#home" data-theme="b" data-role="button" onclick="logOut()">Log out</a>
+      </div>
+    </div>
+
+    <div data-role="page" id="howto" class="ui-how-to-dialog">
+      <div data-role="header" data-theme="a">
+        <h1>How to use?</h1>
+      </div> 
       <div data-role="content" data-theme="d">
-        <a href="#home" data-role="button" onclick="logOut()">Log out</button>
-        <a href="#home" data-role="button">Cancel</a>
+        <p class="text">Hold your phone, and gently shake your phone together with the other person.</br>You should feel your phone vibrating when you shake, and then you’ll see the other person’s name and photo appear on your phone.</br></br> If you don’t feel the vibration when you shake, you likely aren’t shaking hard enough.</p>
+        <a href="#home" data-theme="a" data-role="button">Close</a>
       </div>
     </div>
 
