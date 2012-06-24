@@ -209,7 +209,7 @@ function pair() {
 
             var fbid = other.fbid;
 
-            location.href = "MutualFriends.html#&otherid=" + fbid;
+            location.href = "MutualFriends.html?otherid=" + fbid;
 
 //            var graph = '/me/mutualfriends/' + fbid;
 

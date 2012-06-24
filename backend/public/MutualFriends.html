@@ -3,7 +3,18 @@
 <head>
 	<meta charset="utf-8">
 	<title>Moving Boxes</title>
-	
+  <link href="css/default.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="css/jquery.mobile-1.1.0.min.css" />
+  <script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src='js/mutual-friends.js'></script>
+  <!--script src="js/init.js" type="text/javascript"></script-->
+  <script src='js/jquery-transit.js'></script>
+    <script src="js/facebook_js_sdk.js"></script>
+    <script src='js/cordova-1.7.0.js' type='text/javascript'></script>
+    <script src='js/cdv-plugin-fb-connect.js' type='text/javascript'></script>
+    <script src="js/jquery.mobile-1.1.0.min.js"></script>
+
+	<!--
     <script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
     <script src='js/jquery-transit.js'></script>
     <script src='js/jquery.blockUI.js'></script>
@@ -13,17 +24,17 @@
     <script src="js/geohash.js" type="text/javascript"></script>
 
 
-	<!-- Required CSS -->
+	<!-- Required CSS --><!--
 	<link href="css/movingboxes.css" media="screen" rel="stylesheet">
 	<!--[if lt IE 9]>
 	<link href="css/movingboxes-ie.css" rel="stylesheet" media="screen" />
 	<![endif]-->
 	
-	<!-- Required script -->
+	<!-- Required script --><!--
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 	<script src="js/jquery.movingboxes.js"></script>
 
-	<!-- Demo only -->
+	<!-- Demo only --><!--
 	<link href="demo/demo.css" media="screen" rel="stylesheet">
 	<style>
 		/* Dimensions set via css in MovingBoxes version 2.2.2+ */
@@ -48,25 +59,34 @@
       font-size: small;
     }
     </style>
-    <script src="js/mutual-friends.js" type="text/javascript"></script>
+    <script src="js/mutual-friends.js" type="text/javascript"></script>-->
 
 </head>
 <div id="fb-root"></div>
 <body>
+  <div data-role="page" id="mutualFriends" data-theme="a"> 
+      <div data-role="header" data-position="fixed">
+        <h1>Mutual Friends</h1>
+        <a href="index.html" rel="external" data-role="button" data-transition="slide" class="ui-btn-left" data-inline="true" >Back</a>  
+      </div>
+      <div data-role="content">
+        <div class="showcase">
+          <div class="inside">
+            
+          </div>
+        </div>
 
-<div id="wrapper">
-
-	<br>
-
-    <div id="dvProgress"> 
-        <!--<img src="img/searching.gif" style="vertical-align: middle" alt="Processing" />-->
-        Loading mutual friends ...
+        <div class="helper">
+          <a href="#" class="prev">Previous</a>
+          <a href="#" class="next">Next</a>
+        </div>
+      </div>
     </div>
 
 	<!-- MovingBoxes Slider -->
-	<ul id="slider" class="slider"></ul> <!-- end Slider #1 -->
+	<!--<ul id="slider" class="slider"></ul> <!-- end Slider #1 -->
+  
 
-</div> <!-- end wrapper -->
 
 </body>
 </html>
