@@ -1,6 +1,7 @@
 var server = require('./lib/app');
 server.listen(process.env.PORT || process.env.port || 3000);
 console.log('Listening on %d', process.env.PORT || process.env.port || 3000);
+console.log('Pizu version 2');
 
 // create hook for github deployment
 var githubhook = require('githubhook');
