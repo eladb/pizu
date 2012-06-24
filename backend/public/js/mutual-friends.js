@@ -43,7 +43,9 @@ $(function () {
             //var h = $('ul.slider');
             var h = $('div.inside');
             //$('#dvProgress').css("visibility", "hidden");
-            //h.empty();
+            h.empty();
+            var line = "<a href=\"#\"><img src=\"https://graph.facebook.com/" + otherid + "/picture?type=large\" /></a>";
+            h.append(line);
             friends.forEach(function (friend) {
                 var firstName = friend.name.split(" ")[0];
                 //var line = "<li><img src=\"https://graph.facebook.com/" + friend.id + "/picture?type=large\"><h2>" + firstName + "</h2></li>";
