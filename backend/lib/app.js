@@ -41,12 +41,12 @@ server.post('/', function(req, res) {
   });
 
   //TODO: uncomment the 'if' it is there only for testing
-   if (process.env.NODE_ENV !== 'production') {
+   //if (process.env.NODE_ENV !== 'production') {
       box.deposit('559148860', {
       name: 'Gabi',
       fbid: '559148860'
     });
-   }
+   //}
 
   box.deposit(cid, req.body);
 
