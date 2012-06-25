@@ -6,7 +6,6 @@ var APP_ID = '146577522141106';
   var name = null;
 
 $(function() {
-  console.log("baa");
   function after_login() {
     FB.api('/me', function(response) {
       name = response.name;
@@ -16,6 +15,9 @@ $(function() {
         loadFriendsImages(friendsData.data,20);
       });
     });
+
+    //Enable swiping...
+    enableSwiping();
   }
 
   var browser = 
@@ -304,6 +306,26 @@ function openAlert(body,closeAlertDelegate){
   //$.blockUI({ onBlock: function() { 
     //          }  
     //        }); 
+}
+
+function enableSwiping(){
+  var swipeOptions=
+    {
+      swipeUp:swipeUp,
+      swipeDown:swipeDown,
+      threshold:30,
+      allowPageScroll:"none" 
+    }
+    
+  $("#mutualFriends").swipe( swipeOptions );
+}
+
+function swipeUp(){
+  MutualFriendsAnimation.events.control('prev');
+}
+
+function swipeDown(){
+  MutualFriendsAnimation.events.control('next');
 }
 
 
