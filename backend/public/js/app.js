@@ -1,9 +1,3 @@
-///<reference path="facebook_js_sdk.js" />
-///<reference path="jquery-1.7.2.min.js" />
-///<reference path="cordova-1.7.0.js" />
-///<reference path="cdv-plugin-fb-connect.js" />
-///<reference path="geohash.js" />
-///<reference path="app.js" />
 
 var APP_ID = '146577522141106';
 
@@ -86,23 +80,6 @@ function shakeAnimation() {
     this.className = '';
     });
   }
-  
-    
-
-  
-
-  //$('div#shake img').removeClass("");
-  //console.log($('div#shake img'));
-  
-  //$('div#shake img').addClass("shake");
-  //console.log($('div#shake img'));
-
-  //$('div#shake img').transition({ rotate: '30deg' },{queue:true,duration:'slow',easing:"easein"});
-  //$('div#shake img').transition({ rotate: '-30deg' },{queue:true,duration:'slow',easing:"easein"});
-  //$('div#shake img').transition({ rotate: '30deg' },{queue:true,duration:'slow',easing:"easein"});
-  //$('div#shake img').transition({ rotate: '-30deg' },{queue:true,duration:'slow',easing:"easein"});
-  //$('div#shake img').animate({rotate: '100'},{duration : 1000});
-  //$('div#shake img').css("-webkit-animation", "shake 0.7s ease-in-out 0s 4 alternate");
 }
 
 // The watch id references the current `watchAcceleration`
@@ -112,6 +89,7 @@ var watchID = null;
 function startWatch() {
   $('#dvProgress').css("visibility","hidden");
   console.log('visible');
+  $('ul.polaroids').css("visibility","visible");
   $('div#shake').css("visibility","visible");
   shakeAnimation();
   int = setInterval(shakeAnimation,7000);
@@ -209,38 +187,10 @@ function pair() {
 
             var fbid = other.fbid;
 
-            location.href = "MutualFriends.html?otherid=" + fbid;
-
-//            var graph = '/me/mutualfriends/' + fbid;
-
-//            FB.api(graph, function(res) {
-//              console.log('response:'+JSON.stringify(res));
-//              var friends = res.data;
-                  
-                  
-                  
-                  
-//                //showFriends(friends);
-//                //stop backround animation
-//                clearInterval(backroundIntervalId);
-
-//                var sharedFriends = [];
-//                var friendsLength = friendsImageQueue.length;
-//                // Find not-shared friends and drop them
-//                while (friendsImageQueue.length != 0)
-//                {
-//                  var img = friendsImageQueue.pop();
-//                  var found = false;
-//                  friends.forEach(function(friend){
-//                    if (friend.id == img.fbid) { 
-//                      found = true; 
-//                    };
-//                  });
-//                  if (found) {
-//                    sharedFriends.push(img);
-//                  }; 
-//                };
-            //});
+            //hide polaroids
+            $('ul.polaroids').css("visibility","hidden");
+            location.href = "#mutualFriends";
+            loadMutualFriends(fbid);
           }
         }
       }).fail(function(jqxhr, textStatus, body) {
@@ -277,6 +227,32 @@ var d = 5;
 
 }
 
+function loadMutualFriends(pairId){
+  
+  var graph = '/me/mutualfriends/' + pairId;
+
+  FB.api(graph, function (res) {
+    console.log('response:' + JSON.stringify(res));
+    var friends = res.data;
+
+    mutulFriendsContainer = $('div.inside');
+    mutulFriendsContainer.empty();
+    var line = "<a href=\"#\"><img src=\"https://graph.facebook.com/" + pairId + "/picture?type=large\" /></a>";
+    mutulFriendsContainer.append(line);
+
+    friends.forEach(function (friend) {
+        var firstName = friend.name.split(" ")[0];
+        var line = "<a href=\"#\"><img src=\"https://graph.facebook.com/" + friend.id + "/picture?type=large\" alt=\"" + firstName + "\" /></a>";
+        mutulFriendsContainer.append(line);
+        
+    });
+    
+    $('div.inside a:first-child').addClass("active");
+    //call init.js MutualFriendAnimation methods
+    MutualFriendsAnimation.init();
+  });
+}
+
 function loadFriendsImages(friends,minLoadingFriendNumber){
   var maxShowFriends = 25;
   var randomNumber = Math.floor((Math.random()*(friends.length - maxShowFriends)));
@@ -304,6 +280,8 @@ function loadFriendsImages(friends,minLoadingFriendNumber){
   });
 }
 
+
+
 function afterLoadMinimalFriends() {
   $('ul.polaroids').css("visibility","visible");
   startWatch();  
@@ -326,8 +304,6 @@ function openAlert(body,closeAlertDelegate){
   //$.blockUI({ onBlock: function() { 
     //          }  
     //        }); 
-  
-  
 }
 
 
