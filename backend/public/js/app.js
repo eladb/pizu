@@ -183,16 +183,13 @@ function pair() {
           if (k != cid) {
             var other = payload[k];
 
-            console.log('found other payload:', payload[k]);
-
-            
-
-            var fbid = other.fbid;
+            console.log('found other payload:', other);
+           
 
             //hide polaroids
             $('ul.polaroids').css("visibility","hidden");
             location.href = "#mutualFriends";
-            loadMutualFriends(fbid);
+            loadMutualFriends(other.fbid,other.name);
           }
         }
       }).fail(function(jqxhr, textStatus, body) {
@@ -229,7 +226,7 @@ var d = 5;
 
 }
 
-function loadMutualFriends(pairId){
+function loadMutualFriends(pairId,pairName){
   
   var graph = '/me/mutualfriends/' + pairId;
 
@@ -239,17 +236,18 @@ function loadMutualFriends(pairId){
 
     mutulFriendsContainer = $('div.inside');
     mutulFriendsContainer.empty();
-    var line = "<a href=\"#\"><img src=\"https://graph.facebook.com/" + pairId + "/picture?type=large\" /></a>";
+    var line = "<a><img src=\"https://graph.facebook.com/" + pairId + "/picture?type=large\" alt=\"" + pairName + "\" /></a>";
     mutulFriendsContainer.append(line);
 
     friends.forEach(function (friend) {
         var firstName = friend.name.split(" ")[0];
-        var line = "<a href=\"#\"><img src=\"https://graph.facebook.com/" + friend.id + "/picture?type=large\" alt=\"" + firstName + "\" /></a>";
+        var line = "<a><img src=\"https://graph.facebook.com/" + friend.id + "/picture?type=large\" alt=\"" + firstName + "\" /></a>";
         mutulFriendsContainer.append(line);
         
     });
     
     $('div.inside a:first-child').addClass("active");
+    $('.friendName').append($('.active img').attr("alt"));
     //call init.js MutualFriendAnimation methods
     MutualFriendsAnimation.init();
   });
@@ -322,10 +320,14 @@ function enableSwiping(){
 
 function swipeUp(){
   MutualFriendsAnimation.events.control('prev');
+  $('.friendName').empty();
+  $('.friendName').append($('.active img').attr("alt"));
 }
 
 function swipeDown(){
   MutualFriendsAnimation.events.control('next');
+  $('.friendName').empty();
+  $('.friendName').append($('.active img').attr("alt"));
 }
 
 

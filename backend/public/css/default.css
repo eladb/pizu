@@ -38,11 +38,11 @@ margin-bottom:5px;
 
 .showcase {
 width:200px;
-height:300px;
+height:400px;
 position:absolute;
 top:50%;
 left:50%;
-margin:-150px 0 0 -100px;
+margin:-200px 0 0 -100px;
 overflow:hidden;
 }
 
@@ -102,4 +102,15 @@ background-image:url(../img/next.jpg);
 a {
 color:#eee;
 text-decoration:none;
+}
+
+.friendName {
+	position: absolute;
+	top : 50%;
+	left: 50%;
+	margin:-120px 0 0 -50px;
+  	font-family: "your ideal typeface", Verdana, sans-serif;
+  	font-size: 20px;
+  	line-height: 20px;
+  	text-shadow: -3px 0 4px #006;
 }
