@@ -132,8 +132,15 @@ function startWatch() {
 function shaken(){
   clearInterval(int);
   $('div#shake').css("visibility","hidden");
-  navigator.accelerometer.clearWatch(watchID);
-  navigator.notification.vibrate(2500);
+  //in browser there is no accelerometer
+  if ('accelerometer' in navigator) {
+    navigator.accelerometer.clearWatch(watchID);
+  }
+  //in browser there is no notification
+  if ('notification' in navigator) {
+    navigator.notification.vibrate(2500);
+  }
+  
   pair();
 }
 
